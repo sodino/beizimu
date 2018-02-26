@@ -1,13 +1,14 @@
 package bei.zi.mu.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import bei.zi.mu.R
+import bei.zi.mu.TitlebarActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : TitlebarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
     }
 }
