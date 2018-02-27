@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brightBlue">#007ffd</color>
+    <color name="brightRed">#ff5959</color>
+    <color name="brightGreen">#17c19b</color>
+
+    <color name="fontBlack">#333333</color>
+    <color name="fontGrey">#999999</color>
+    <color name="fontTips">#cccccc</color>
+
+    <color name="brightOrange">#ff845a</color>
+
+    <color name="bgGary">#f2f2f2</color>
+    <color name="bgWhite">#ffffff</color>
+
+    <color name="lineGrey">#e6e6e6</color>
+</resources>

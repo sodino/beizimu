@@ -11,4 +11,5 @@ class MainActivity : TitlebarActivity() {
         setContentView(R.layout.activity_main)
 
     }
+
 }

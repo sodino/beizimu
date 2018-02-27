@@ -6,6 +6,6 @@ package sodino.log
 interface Catty{
     fun i(log: String)
     fun d(log: String, throwable : Throwable? = null)
-    fun e(log: String, throwable: Throwable? = null)
+    fun e(log: String = "", throwable: Throwable? = null)
 //    fun f(log: String, throwable: Throwable? = null)
 }
