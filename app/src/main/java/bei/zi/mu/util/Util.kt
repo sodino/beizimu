@@ -8,6 +8,15 @@ import bei.zi.mu.thread.ThreadPool
 /**
  * Created by sodino on 2018/2/27.
  */
+
+fun Long.hexString() : String {
+    return java.lang.Long.toHexString(this.toLong())
+}
+
+fun Int.hexString() : String {
+    return java.lang.Integer.toHexString(this.toInt())
+}
+
 object Device {
     val BASE = 1000
     val XIAOMI = BASE + BASE

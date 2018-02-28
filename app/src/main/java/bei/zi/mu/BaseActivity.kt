@@ -12,6 +12,7 @@ import android.view.View
 import android.view.WindowManager
 import bei.zi.mu.util.Device
 import bei.zi.mu.util.Statusbar
+import bei.zi.mu.util.hexString
 
 /**
  * Created by sodino on 2018/2/26.
@@ -23,7 +24,7 @@ open class BaseActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LogCat.d("${this@BaseActivity.javaClass.simpleName}@${Integer.toHexString(hashCode())}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     override fun setContentView(layoutResID: Int) {
@@ -88,10 +89,10 @@ open class BaseActivity : FragmentActivity() {
     open fun fixTransparentStatusBarWhiteTextColor(rootView :View, viewTSBarBg : View?) : Boolean {
         val vTSBarBg = viewTSBarBg
         if (Device.isMeizu()) {
-            Statusbar.fix(Device.MEIZU, this, false)
+            Statusbar.fix(Device.MEIZU, this, true)
             return true
         } else if (Device.isMIUI()) {
-            Statusbar.fix(Device.XIAOMI, this, false)
+            Statusbar.fix(Device.XIAOMI, this, true)
             return true
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // M及以上会使用亮色模式,不需要修改
@@ -109,33 +110,33 @@ open class BaseActivity : FragmentActivity() {
 
     override fun onStart() {
         super.onStart()
-        LogCat.d("${this@BaseActivity.javaClass.simpleName}@${Integer.toHexString(hashCode())}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     override fun onRestart() {
         super.onRestart()
 
-        LogCat.d("${this@BaseActivity.javaClass.simpleName}@${Integer.toHexString(hashCode())}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     override fun onResume() {
         super.onResume()
-        LogCat.d("${this@BaseActivity.javaClass.simpleName}@${Integer.toHexString(hashCode())}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     override fun onPause() {
         super.onPause()
-        LogCat.d("${this@BaseActivity.javaClass.simpleName}@${Integer.toHexString(hashCode())}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     override fun onStop() {
         super.onStop()
-        LogCat.d("${this@BaseActivity.javaClass.simpleName}@${Integer.toHexString(hashCode())}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        LogCat.d("${this@BaseActivity.javaClass.simpleName}@${Integer.toHexString(hashCode())}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     @Deprecated("Use doBackPressed() instead")

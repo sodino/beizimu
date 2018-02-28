@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="status_bar_background" type="id"/>
+    <item name="titlebar_right" type="id"/>
+    <item name="titlebar_title" type="id"/>
 </resources>
