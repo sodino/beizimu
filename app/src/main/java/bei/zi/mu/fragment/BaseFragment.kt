@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import bei.zi.mu.LogCat
 import bei.zi.mu.util.hexString
 
@@ -14,17 +16,21 @@ import bei.zi.mu.util.hexString
 open class BaseFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        LogCat.d("${javaClass.simpleName} ${hashCode().hexString()}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        LogCat.d("${javaClass.simpleName} ${hashCode().hexString()}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LogCat.d("${javaClass.simpleName} ${hashCode().hexString()}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return null
     }
 
 //    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -60,17 +66,17 @@ open class BaseFragment : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        LogCat.d("${javaClass.simpleName} ${hashCode().hexString()}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        LogCat.d("${javaClass.simpleName} ${hashCode().hexString()}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        LogCat.d("${javaClass.simpleName} ${hashCode().hexString()}")
+        LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
     }
 
 }

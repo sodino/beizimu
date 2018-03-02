@@ -3,18 +3,25 @@ package bei.zi.mu.activity
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
 import bei.zi.mu.adapter.MainAdapter
 import bei.zi.mu.thread.ThreadPool
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.word_card_titlebar.*
 
-class MainActivity : TitlebarActivity(), ViewPager.OnPageChangeListener, TabLayout.OnTabSelectedListener {
+class MainActivity : TitlebarActivity(), ViewPager.OnPageChangeListener, TabLayout.OnTabSelectedListener, View.OnClickListener {
 
-    val mainAdapter : MainAdapter   by lazy { MainAdapter(supportFragmentManager) }
-    val tabLayoutListener           by lazy { TabLayout.TabLayoutOnPageChangeListener(tabLayout) }
-    var oldSelectedTab: Int?        = null
+    private val mainAdapter         by lazy { MainAdapter(supportFragmentManager) }
+    private val tabLayoutListener   by lazy { TabLayout.TabLayoutOnPageChangeListener(tabLayout) }
+    private lateinit var imgSearch  : ImageView
+    private lateinit var imgCamera  : ImageView
+    private var oldSelectedTab      : Int?        = null
+
     companion object {
         val SHOW_MAIN               = 0             // 显示tab的主界面
         val SHOW_SPLASH             = SHOW_MAIN + 1 // 显示splash页
@@ -34,11 +41,34 @@ class MainActivity : TitlebarActivity(), ViewPager.OnPageChangeListener, TabLayo
         }
     }
 
+    override fun createTitlebar(parentLayout: LinearLayout): View {
+        layoutInflater.inflate(R.layout.word_card_titlebar, parentLayout, true)
+        val relLayout = parentLayout.findViewById<RelativeLayout>(R.id.titlebar_layout)
+        imgSearch = relLayout.findViewById(R.id.imgSearch)
+        imgCamera = relLayout.findViewById(R.id.imgCamera)
+        imgSearch.setOnClickListener(this)
+        imgCamera.setOnClickListener(this)
+        return relLayout
+    }
+
+    override fun onClick(v: View) {
+        when(v.id) {
+            R.id.imgCamera      -> {}
+            R.id.imgSearch      -> {}
+        }
+    }
+
+
     private fun showMain() {
         window.setBackgroundDrawableResource(R.drawable.activity_white_bg)
-        setContentViewNoTitlebar(R.layout.activity_main)
+        setContentView(R.layout.activity_main)
 
         MainAdapter.fillTab(layoutInflater, tabLayout)
+
+        titlebar_title.text = "BZM"
+
+        imgCamera.setOnClickListener(this)
+        imgSearch.setOnClickListener(this)
 
         vPager.adapter = mainAdapter
         // fix fragment因为被回收会再重新显示时会没有数据
@@ -50,6 +80,9 @@ class MainActivity : TitlebarActivity(), ViewPager.OnPageChangeListener, TabLayo
     }
 
     private fun showSplash() {
+        // 设置透明状态栏生效
+        setTransparentStatusbar(null)
+
         // SAM constructor : single abstract method
         ThreadPool.UIHandler.postDelayed({ showMain() }, 2000);
     }

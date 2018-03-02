@@ -34,7 +34,7 @@ open class TitlebarActivity : BaseActivity() {
         linearLayout.orientation = LinearLayout.VERTICAL
         linearLayout.isScrollContainer = true
 
-        viewStatusbarBackground = createStatusbar(linearLayout);
+        viewStatusbarBackground = createStatusbar(linearLayout)
         viewTitlebar = createTitlebar(linearLayout)
 
         linearLayout.addView(viewContent, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT))

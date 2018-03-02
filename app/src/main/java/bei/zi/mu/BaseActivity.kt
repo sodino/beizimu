@@ -35,6 +35,10 @@ open class BaseActivity : FragmentActivity() {
     override fun setContentView(view: View) {
         rootView = view
         super.setContentView(view)
+        setTransparentStatusbar(view)
+    }
+
+    protected fun setTransparentStatusbar(view: View?) {
         if (isFixTransparentStatusBar()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // 在kotlin中用 or 代替 java 中的'|'
@@ -49,13 +53,13 @@ open class BaseActivity : FragmentActivity() {
 
                 fixTransparentStatusBar(view)
                 // 最后fix一下状态栏背景白色与系统的文字图标白色的问题
-                fixTransparentStatusBarWhiteTextColor(view, viewStatusbarBackground)
+                fixTransparentStatusBarWhiteTextColor(viewStatusbarBackground)
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
 
                 fixTransparentStatusBar(view)
                 // 最后fix一下状态栏背景白色与系统的文字图标白色的问题
-                fixTransparentStatusBarWhiteTextColor(view, viewStatusbarBackground)
+                fixTransparentStatusBarWhiteTextColor(viewStatusbarBackground)
             } else {
                 setStatusbarBackgroundGone()
             }
@@ -78,7 +82,7 @@ open class BaseActivity : FragmentActivity() {
         }
     }
 
-    open fun fixTransparentStatusBar(view: View) {
+    open fun fixTransparentStatusBar(view: View?) {
         // 当出现自定义TransparentStatusbarView时，重载处理
     }
 
@@ -86,8 +90,7 @@ open class BaseActivity : FragmentActivity() {
         return true;
     }
 
-    open fun fixTransparentStatusBarWhiteTextColor(rootView :View, viewTSBarBg : View?) : Boolean {
-        val vTSBarBg = viewTSBarBg
+    open fun fixTransparentStatusBarWhiteTextColor(viewTSBarBg : View?) : Boolean {
         if (Device.isMeizu()) {
             Statusbar.fix(Device.MEIZU, this, true)
             return true
@@ -97,9 +100,9 @@ open class BaseActivity : FragmentActivity() {
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // M及以上会使用亮色模式,不需要修改
             return false
-        } else if (vTSBarBg != null && vTSBarBg.visibility == View.VISIBLE) {
+        } else if (viewTSBarBg != null && viewTSBarBg.visibility == View.VISIBLE) {
             // 其它的机子在android 4.4到5.2之间的，都没办法改状态栏图标及文字的颜色，所以要改背景
-            vTSBarBg.setBackgroundResource(R.drawable.status_bar_background)
+            viewTSBarBg.setBackgroundResource(R.drawable.status_bar_background)
             return true
         } else {
             return false

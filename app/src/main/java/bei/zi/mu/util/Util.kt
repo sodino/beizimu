@@ -10,11 +10,11 @@ import bei.zi.mu.thread.ThreadPool
  */
 
 fun Long.hexString() : String {
-    return java.lang.Long.toHexString(this.toLong())
+    return java.lang.Long.toHexString(this)
 }
 
 fun Int.hexString() : String {
-    return java.lang.Integer.toHexString(this.toInt())
+    return java.lang.Integer.toHexString(this)
 }
 
 object Device {
