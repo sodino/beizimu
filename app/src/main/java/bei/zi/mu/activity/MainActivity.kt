@@ -54,7 +54,9 @@ class MainActivity : TitlebarActivity(), ViewPager.OnPageChangeListener, TabLayo
     override fun onClick(v: View) {
         when(v.id) {
             R.id.imgCamera      -> {}
-            R.id.imgSearch      -> {}
+            R.id.imgSearch      -> {
+                SearchActivity.launch(this)
+            }
         }
     }
 

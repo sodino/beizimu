@@ -24,6 +24,7 @@ class ThreadPool {
 
         val lock                    by lazy { ReentrantLock() }
         val instance                by lazy { ThreadPool() }
+        val threadsExecutor by lazy { instance.threadsExecutor }
         val UIHandler               by lazy { Handler() }
         val workHandler             by lazy {
             val thread = HandlerThread("app.handler.work")
