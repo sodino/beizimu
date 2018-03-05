@@ -8,7 +8,7 @@ import sodino.log.Catty
  */
 class LogCat{
     companion object : Catty{
-        val cat : Cat = Cat("bzm")
+        private val cat : Cat = Cat("bzm")
 
         override fun i(log : String) {
             cat.i(log)

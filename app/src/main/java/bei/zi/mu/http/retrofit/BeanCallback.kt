@@ -2,12 +2,11 @@ package bei.zi.mu.http.retrofit
 
 import android.text.TextUtils
 import bei.zi.mu.App
+import bei.zi.mu.Const
 import bei.zi.mu.LogCat
 import bei.zi.mu.R
 import bei.zi.mu.http.bean.Bean
 import bei.zi.mu.http.bean.ErrorBean
-import bei.zi.mu.util.getUrlBodyTag
-import bei.zi.mu.util.getUrlTypeName
 import bei.zi.mu.util.showToast
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -17,6 +16,72 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.nio.charset.Charset
 
+
+
+data class UrlTypeName(val type: String, val urlSuffix : String)
+fun String.getUrlTypeName() : UrlTypeName {
+    var type = "other"
+    var suffix : String? = null
+
+    when {
+        this.startsWith(Const.URL.ICIBA)                -> {
+            type = "iciba"
+            suffix = this.substring(Const.URL.ICIBA.length)
+        }
+        this.startsWith(Const.URL.GITHUB_USER_CONTENT)  -> {
+            type = "github"
+            suffix = this.substring(Const.URL.GITHUB_USER_CONTENT.length)
+        }
+        else                        -> {
+            type = "other"
+            suffix = this
+        }
+    }
+
+    return UrlTypeName(type, suffix)
+}
+
+fun String.getUrlBodyTag() :String {
+    val queIndex = this.indexOf("?")
+
+    var lastIndex = 0
+    if (queIndex <= 0) {
+        // 没有带参数的url
+        lastIndex = this.length
+    } else {
+        lastIndex = queIndex
+    }
+
+    val strNoParam = this.substring(0, lastIndex)
+
+    val arrs = strNoParam.split("/")
+
+    val minSize = 1 // arrs 如果不包含"/"，则arrs.lenght的最小值为1。
+    var content = "other"
+    if (arrs.size == minSize) {
+        content = arrs.get(minSize - 1)
+    } else {
+        var charNum = 0
+        var first = arrs.get(minSize - 1)
+        val length = first.length
+        if (length > 3) {
+            first = first.substring(0, 3)
+            charNum = length - 3
+        }
+
+        charNum = charNum + 1 // "1"是"/"的个数
+
+        var endIndex = arrs.size - 1 // 最后一个也单独处理
+        for (i in minSize until endIndex) {
+            charNum += arrs.get(i).length + 1 // "1"是"/"的个数
+        }
+
+        val lastAction = arrs.get(arrs.size - 1)
+        content = first + "(" + charNum.toString() + ")" + lastAction
+    }
+
+    return content
+}
 
 /**
  * Created by sodino on 2018/3/4.
@@ -114,7 +179,7 @@ abstract class BeanCallback<T> : Callback<T> {
             }
         }
     }
-    fun getLogMark(call : Call<*>) : String {
+    private fun getLogMark(call : Call<*>) : String {
         var tmp = logMark
         if (tmp != null) {
             return tmp

@@ -12,9 +12,15 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import bei.zi.mu.LogCat
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
+import bei.zi.mu.http.bean.WordBean
+import bei.zi.mu.http.retrofit.ARetrofit
+import bei.zi.mu.http.retrofit.BeanCallback
 import bei.zi.mu.util.showToast
+import retrofit2.Call
+import retrofit2.Response
 
 /**
  * Created by sodino on 2018/3/4.
@@ -57,17 +63,34 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
     override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent?): Boolean {
         when(actionId) {
             EditorInfo.IME_ACTION_SEARCH -> {
-                val text = editWord.text.toString().trim()
-                if (TextUtils.isEmpty(text)) {
-                    "Please enter a word".showToast(this@SearchActivity)
+                val word = editWord.text.toString().trim()
+                if (TextUtils.isEmpty(word)) {
+                    "Please enter a word".showToast()
                     return true
                 }
 
                 (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
-
+                reqWord(word)
             }
         }
         return true
+    }
+
+    fun reqWord(word: String) {
+        val api = ARetrofit.wordApi
+        var map = ARetrofit.baseQueryMap()
+        map = map.plus(Pair("word", word))
+//        val call = api.reqIciba(map)
+        val call = api.reqGithubWord(word[0].toString(), word)
+        call.enqueue(object : BeanCallback<WordBean>(){
+            override fun onResponse(bean: WordBean, isFilled: Boolean) {
+                LogCat.d("isFilled=${isFilled}")
+            }
+
+            override fun onFailure(call: Call<WordBean>, t: Throwable?, response: Response<*>?, respCode: Int) {
+                LogCat.d("respCode=${respCode}")
+            }
+        })
     }
 }

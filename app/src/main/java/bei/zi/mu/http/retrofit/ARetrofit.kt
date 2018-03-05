@@ -13,7 +13,7 @@ class ARetrofit {
     companion object {
         val okHttpClient by lazy { OkHttpClient.Builder().addInterceptor(AInterceptor()).build() }
 
-        val wordApi by lazy { getCommonRetrofit(Const.URL.ICIBA).create(WordApi::class.java) }
+        val wordApi by lazy { getCommonRetrofit(Const.URL.GITHUB_USER_CONTENT).create(WordApi::class.java) }
 
         fun getCommonRetrofit(baseUrl : String) : Retrofit {
             val retrofit = Retrofit.Builder()

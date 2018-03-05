@@ -5,6 +5,7 @@ package bei.zi.mu
  */
 class Const {
     object URL{
-        const val ICIBA = "http://www.iciba.com/"
+        const val ICIBA                 = "http://www.iciba.com/"
+        const val GITHUB_USER_CONTENT   = "https://raw.githubusercontent.com/"
     }
 }

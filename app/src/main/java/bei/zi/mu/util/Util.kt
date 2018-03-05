@@ -3,6 +3,7 @@ package bei.zi.mu.util
 import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.os.Looper
 import android.widget.Toast
 import bei.zi.mu.App
 import bei.zi.mu.Const
@@ -23,74 +24,19 @@ fun String.showToast() {
 }
 
 
-data class UrlTypeName(val type: String, val urlSuffix : String)
-fun String.getUrlTypeName() : UrlTypeName {
-    val preIciba = Const.URL.ICIBA
-    var type = "other"
-    var suffix : String? = null
-
-    when {
-        this.startsWith(preIciba)   -> {
-            type = "iciba"
-            suffix = this.substring(preIciba.length)
-        }
-        else                        -> {
-            type = "other"
-            suffix = this
-        }
-    }
-
-    return UrlTypeName(type, suffix)
-}
-
-fun String.getUrlBodyTag() :String {
-    val queIndex = this.indexOf("?")
-
-    var lastIndex = 0
-    if (queIndex <= 0) {
-        // 没有带参数的url
-        lastIndex = this.length
-    } else {
-        lastIndex = queIndex
-    }
-
-    val strNoParam = this.substring(0, lastIndex)
-
-    val arrs = strNoParam.split("/")
-
-    val minSize = 1 // arrs 如果不包含"/"，则arrs.lenght的最小值为1。
-    var content = "other"
-    if (arrs.size == minSize) {
-        content = arrs.get(minSize - 1)
-    } else {
-        var charNum = 0
-        var first = arrs.get(minSize - 1)
-        val length = first.length
-        if (length > 3) {
-            first = first.substring(0, 3)
-            charNum = length - 3
-        }
-
-        charNum = charNum + 1 // "1"是"/"的个数
-
-        var endIndex = arrs.size - 1 // 最后一个也单独处理
-        for (i in minSize until endIndex) {
-            charNum += arrs.get(i).length + 1 // "1"是"/"的个数
-        }
-
-        val lastAction = arrs.get(arrs.size - 1)
-        content = first + "(" + charNum.toString() + ")" + lastAction
-    }
-
-    return content
-}
 
 fun Long.hexString() : String {
     return java.lang.Long.toHexString(this)
 }
 
 fun Int.showToast() {
-    Toast.makeText(App.myApp, App.myApp.getText(this), Toast.LENGTH_SHORT).show()
+    if (Looper.myLooper() == Looper.getMainLooper()) {
+        Toast.makeText(App.myApp, App.myApp.getText(this), Toast.LENGTH_SHORT).show()
+    } else {
+        ThreadPool.UIHandler.post({
+            Toast.makeText(App.myApp, App.myApp.getText(this), Toast.LENGTH_SHORT).show()
+        })
+    }
 }
 
 fun Int.hexString() : String {
