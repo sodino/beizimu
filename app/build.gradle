@@ -9,7 +9,9 @@ dependencies {
 }
 
 apply plugin: 'io.objectbox'
-
+// 与java的不同，objectbox需要再额外引用plugin  kotlin-kapt
+// 见：https://github.com/objectbox/objectbox-java/issues/98
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 26
