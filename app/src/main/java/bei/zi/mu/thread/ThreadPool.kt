@@ -33,8 +33,8 @@ class ThreadPool {
         }
     }
 
-    lateinit var blockingQueue      : BlockingQueue<Runnable>
-    lateinit var threadsExecutor    : ThreadsExecutor
+    var blockingQueue      : BlockingQueue<Runnable>
+    var threadsExecutor    : ThreadsExecutor
 
     val threadFactory = ThreadFactory { runnable ->
         index ++
