@@ -7,7 +7,6 @@ import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToMany
-import io.objectbox.relation.ToOne
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -31,6 +30,8 @@ data class WordBean(
         var means                   : ToMany<MeansBean>?        = null, // 单词解释
         @Backlink(to = "word")
         var exchanges               : ToMany<ExchangeBean>?     = null, // 复数、过去式、完成时等单词变形
+        @Backlink(to = "word")
+        var memory                  : ToMany<MemoryBean>?       = null, // 记忆、复习次数、时间等信息
         var tag                     : String?                   = null  // cet4,cet6,tofel,kaoyan等...
         ) : Bean() {
     override fun isFilled(): Boolean {
@@ -105,17 +106,46 @@ data class WordBean(
         return result
     }
 
-    fun save() {
+    /**
+     * @param updateMemory : true:之前有存储过该单词的情况下，允许更新记忆数据
+     * */
+    fun save(updateMemory : Boolean = false,
+             okPhonetic : Boolean = false,
+             okMean : Boolean = false) {
         val box = App.myApp.boxStore.boxFor(WordBean::class.java)
         val oldBean = box.query().equal(WordBean_.name, name).build().findFirst()
-//        // 当不存在oldBean时写入db
-//        oldBean?:box.put(this)
+        val now = System.currentTimeMillis()
         if (oldBean == null) {
+            // 当不存在oldBean时写入db
+            val memBean = MemoryBean(tCreate = now,
+                    tLastReview = now,
+                    reviewNum = 1,
+                    okPhonetic = okPhonetic,
+                    okMean = okMean)
+            memory?.add(memBean)
             box.put(this)
             LogCat.d("save $name")
         } else {
-            LogCat.d("already exist $name, skip save.")
+            if (updateMemory) {
+                var memBean = oldBean.memory?.get(0)
+                if (memBean == null) {
+                    memBean = MemoryBean(tCreate = now,
+                            tLastReview = now,
+                            reviewNum = 1,
+                            okPhonetic = okPhonetic,
+                            okMean = okMean)
+                } else {
+                    memBean = memBean.copy(tLastReview = now,
+                            reviewNum = memBean.reviewNum + 1,
+                            okPhonetic = okPhonetic,
+                            okMean = okMean)
+                }
+
+                memory?.clear()
+                memory?.add(memBean)
+                box.put(this)
+            }
+            LogCat.d("already exist $name, update memory.")
         }
     }
-
 }

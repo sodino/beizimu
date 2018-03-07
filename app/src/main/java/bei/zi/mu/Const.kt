@@ -13,8 +13,17 @@ class Const {
         const val KAO_YAN                  = 0
         const val CET_6                    = 1
         const val CET_4                    = 2
+        const val GRE                      = 3
         const val TOEFL                    = 4
         const val IELTS                    = 5
+        val map : Map<Int, String>         = mapOf(
+                KAO_YAN     to "考研",
+                CET_6       to "CET6",
+                CET_4       to "CET4",
+                GRE         to "GRE",
+                TOEFL       to "TOEFL",
+                IELTS       to "IELTS"
+        )
     }
 
     object exchange{

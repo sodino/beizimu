@@ -113,10 +113,47 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "5:7819702410253358436",
+      "lastPropertyId": "7:530675799212638125",
+      "name": "MemoryBean",
+      "properties": [
+        {
+          "id": "1:688007596231919272",
+          "name": "id"
+        },
+        {
+          "id": "2:4692981281317334978",
+          "name": "tCreate"
+        },
+        {
+          "id": "3:5284117870969143832",
+          "name": "tLastReview"
+        },
+        {
+          "id": "4:6496118726854663428",
+          "name": "reviewNum"
+        },
+        {
+          "id": "5:6479316396409926937",
+          "name": "okPhonetic"
+        },
+        {
+          "id": "6:4634915595446946814",
+          "name": "okMean"
+        },
+        {
+          "id": "7:530675799212638125",
+          "indexId": "5:2331418966127050115",
+          "name": "wordId"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "4:810500036252276797",
-  "lastIndexId": "4:5696530760759328721",
+  "lastEntityId": "5:7819702410253358436",
+  "lastIndexId": "5:2331418966127050115",
   "lastRelationId": "1:3441114284914328819",
   "lastSequenceId": "0:0",
   "modelVersion": 4,

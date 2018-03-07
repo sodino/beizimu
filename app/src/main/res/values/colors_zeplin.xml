@@ -6,6 +6,7 @@
 
     <color name="fontBlack">#333333</color>
     <color name="fontGrey">#999999</color>
+    <color name="fontBlue">@color/brightBlue</color>
     <color name="fontTips">#cccccc</color>
 
     <color name="brightOrange">#ff845a</color>

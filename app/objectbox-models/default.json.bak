@@ -87,12 +87,7 @@
           "name": "tag"
         }
       ],
-      "relations": [
-        {
-          "id": "1:3441114284914328819",
-          "name": "phoneticSymbol"
-        }
-      ]
+      "relations": []
     },
     {
       "id": "4:810500036252276797",
@@ -133,6 +128,8 @@
   "retiredPropertyUids": [
     1204467554723018680
   ],
-  "retiredRelationUids": [],
+  "retiredRelationUids": [
+    3441114284914328819
+  ],
   "version": 1
 }
