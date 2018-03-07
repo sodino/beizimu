@@ -1,0 +1,138 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2871850922205454646",
+      "lastPropertyId": "4:2908540702319857124",
+      "name": "MeansBean",
+      "properties": [
+        {
+          "id": "1:9058120847298088797",
+          "name": "id"
+        },
+        {
+          "id": "2:9202938633174841439",
+          "name": "part"
+        },
+        {
+          "id": "3:2010227297602413070",
+          "name": "mean"
+        },
+        {
+          "id": "4:2908540702319857124",
+          "indexId": "1:2704980403048716118",
+          "name": "wordId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:5873722315364439236",
+      "lastPropertyId": "7:2510138736033108940",
+      "name": "PhoneticSymbol",
+      "properties": [
+        {
+          "id": "1:3781106770536774516",
+          "name": "id"
+        },
+        {
+          "id": "2:5212868033191049531",
+          "name": "en"
+        },
+        {
+          "id": "3:1930949176852459389",
+          "name": "en_mp3"
+        },
+        {
+          "id": "4:1604581883183768343",
+          "name": "am"
+        },
+        {
+          "id": "5:4434807090952465813",
+          "name": "am_map3"
+        },
+        {
+          "id": "6:3415659391161211332",
+          "name": "tts_mp3"
+        },
+        {
+          "id": "7:2510138736033108940",
+          "indexId": "2:3984221427260485479",
+          "name": "wordId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:5058213223683246800",
+      "lastPropertyId": "5:1204467554723018680",
+      "name": "WordBean",
+      "properties": [
+        {
+          "id": "1:5490028744083761615",
+          "name": "id"
+        },
+        {
+          "id": "2:1133003391760955999",
+          "name": "name"
+        },
+        {
+          "id": "3:4065026420737677691",
+          "name": "frequence"
+        },
+        {
+          "id": "4:434359020750387510",
+          "name": "tag"
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:3441114284914328819",
+          "name": "phoneticSymbol"
+        }
+      ]
+    },
+    {
+      "id": "4:810500036252276797",
+      "lastPropertyId": "4:2035076946223238412",
+      "name": "ExchangeBean",
+      "properties": [
+        {
+          "id": "1:974869334602408200",
+          "name": "id"
+        },
+        {
+          "id": "2:960781515956835224",
+          "name": "type"
+        },
+        {
+          "id": "3:1463062098079244699",
+          "name": "exchange"
+        },
+        {
+          "id": "4:2035076946223238412",
+          "indexId": "4:5696530760759328721",
+          "name": "wordId"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "4:810500036252276797",
+  "lastIndexId": "4:5696530760759328721",
+  "lastRelationId": "1:3441114284914328819",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [
+    7231857402167071217
+  ],
+  "retiredPropertyUids": [
+    1204467554723018680
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}
