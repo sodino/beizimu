@@ -5,8 +5,10 @@ package bei.zi.mu.http.bean
  */
 class ErrorBean : Bean() {
 
-    override val isFilled: Boolean
-        get() = true
+    override fun isFilled(): Boolean {
+        return code != -1
+    }
+
 
     override fun parse(response: String) {
     }
