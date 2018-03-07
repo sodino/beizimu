@@ -1,6 +1,7 @@
 package bei.zi.mu.http.bean
 
 import io.objectbox.annotation.Backlink
+import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
 import org.json.JSONObject
@@ -8,6 +9,7 @@ import org.json.JSONObject
 /**
  * Created by sodino on 2018/3/6.
  */
+@Entity
 data class PhoneticSymbol(
         @Id
         var id                  : Long                  = 0,
@@ -19,7 +21,13 @@ data class PhoneticSymbol(
         var word                : ToOne<WordBean>?      = null
         ) : BeanInterface {
         override fun isFilled(): Boolean {
-                return true
+            val result = en?.isNotEmpty()?:false
+            || en_mp3?.isNotEmpty()?:false
+            || am?.isNotEmpty()?:false
+            || am_map3?.isNotEmpty()?:false
+            || tts_mp3?.isNotEmpty()?:false
+
+            return result
         }
 
         companion object {

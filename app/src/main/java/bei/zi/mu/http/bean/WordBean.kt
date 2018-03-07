@@ -1,6 +1,8 @@
 package bei.zi.mu.http.bean
 
-import bei.zi.mu.Const
+import android.text.TextUtils
+import bei.zi.mu.App
+import bei.zi.mu.LogCat
 import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
@@ -10,6 +12,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
+ * ToMany ToOne的类似，会被objectbox的gradle在预编译时直接改造
+ * 见反编译的结果：http://wx2.sinaimg.cn/large/e3dc9ceagy1fp4c51sb4sj21ag0w8dmr.jpg
  * Created by sodino on 2018/3/4.
  */
 
@@ -19,7 +23,10 @@ data class WordBean(
         var id                      : Long                      = 0,
         var name                    : String?                   = null,
         var frequence               : Int                       = 0,    // 星级
-        var phoneticSymbol          : ToOne<PhoneticSymbol>?    = null, // 音标 与 发音mp3文件
+        @Backlink(to = "word")
+        var phoneticSymbol          : ToMany<PhoneticSymbol>?   = null, // 音标 与 发音mp3文件
+        // 以下为反编译后的实现
+//        var phoneticSymbol          : ToMany<PhoneticSymbol>    = ToMany(this@WordBean, WordBean_.phoneticSymbol), // 音标 与 发音mp3文件
         @Backlink(to = "word")
         var means                   : ToMany<MeansBean>?        = null, // 单词解释
         @Backlink(to = "word")
@@ -27,63 +34,60 @@ data class WordBean(
         var tag                     : String?                   = null  // cet4,cet6,tofel,kaoyan等...
         ) : Bean() {
     override fun isFilled(): Boolean {
-        return true
+//        val bName = !TextUtils.isEmpty(name)
+//        val bPhonetic = phoneticSymbol?.target?.isFilled()
+//        val bMeans = means?.isNotEmpty()
+//        // java的写法：
+//        // 这里bPhonetic和bMeans会出错：  Required: kotlin.Boolean. Found: kotlin.Boolean?
+//        return bName && bPhonetic && bMeans
+
+
+        // kotlin的两种写法
+        // 第一种
+//        val bName = !TextUtils.isEmpty(name)
+//        val bPhonetic = phoneticSymbol?.target?.isFilled() ?: false
+//        val bMeans = means?.isNotEmpty() ?: false
+//        return bName && bPhonetic && bMeans
+        // 第二种
+        val bName = !TextUtils.isEmpty(name)
+        val bPhonetic = phoneticSymbol?.isNotEmpty()
+        val bMeans = means?.isNotEmpty()
+        return bName && (bPhonetic?: false) && (bMeans?: false)
     }
 
 
     override fun parse(response: String) {
         var jsonObj = JSONObject(response)
-        var baseInfo = jsonObj.optJSONObject("baseInfo")
+        var baseInfo = jsonObj.optJSONObject("baesInfo")    // iciba的数据写错了，竟然写成 baes ！！！
         name = baseInfo.optString("word_name")
         frequence = baseInfo.optInt("frequence")
         tag = parseTag(baseInfo.optJSONArray("word_tag"))
-        val word = WordBean(name = name, frequence = frequence, tag = tag)
 
         val jsonExchanges = baseInfo.optJSONObject("exchange")
-        val listExchange = parseExchanges(jsonExchanges)
-        word.exchanges?.addAll(listExchange)
-
+        if (jsonExchanges != null) {
+            val listExchange = ExchangeBean.parse(jsonExchanges)
+            if (listExchange != null && listExchange.isNotEmpty()) {
+                exchanges?.addAll(listExchange)
+            }
+        }
 
         var symbols = baseInfo.optJSONArray("symbols")[0] as JSONObject
         var phonetic : PhoneticSymbol? = null
         if (symbols != null) {
             phonetic = PhoneticSymbol.parse(symbols)
-            word.phoneticSymbol?.target = phonetic
+            phoneticSymbol?.add(phonetic)
         }
         val jsonMeans = symbols.optJSONArray("parts")
         if (jsonMeans != null) {
-            val listMeans = parseMeans(jsonMeans)
-            word.means?.addAll(listMeans)
-        }
-    }
-
-    private fun parseMeans(jsonMeans: JSONArray) : List<MeansBean> {
-        val listMeans = mutableListOf<MeansBean>()
-
-        val length = jsonMeans.length()
-        for (i in 0 until length) {
-            val json = jsonMeans.get(i) as JSONObject
-            val part = json.optString("part")
-            val jsonPartMeans = json.optJSONArray("means") as JSONArray
-            val lPartMeans = jsonPartMeans.length()
-            var strMeans = ""
-            for (j in 0 until lPartMeans) {
-                if (strMeans.length > 0) {
-                    strMeans += "; "
-                }
-                strMeans += jsonPartMeans.get(j).toString()
+            val listMeans = MeansBean.parse(jsonMeans)
+            if (listMeans != null && listMeans.isNotEmpty()) {
+                means?.addAll(listMeans)
             }
-
-            val bean = MeansBean(part = part, mean = strMeans)
-            listMeans.add(bean)
         }
-
-        return listMeans
     }
 
     private fun parseTag(jsonArr: JSONArray?): String? {
         var result = ""
-
 
         jsonArr?.let {
             val size = it.length()
@@ -101,17 +105,17 @@ data class WordBean(
         return result
     }
 
-    private fun parseExchanges(jsonExchanges: JSONObject) : List<ExchangeBean> {
-        val list = mutableListOf<ExchangeBean>()
-
-
-        for ((type, name) in Const.exchange.map) {
-            val plArr = jsonExchanges.optJSONArray("word_${name}") as JSONArray
-            if (plArr.length() > 0) {
-                list.add(ExchangeBean(type = type, exchange = plArr.getString(0)))
-            }
+    fun save() {
+        val box = App.myApp.boxStore.boxFor(WordBean::class.java)
+        val oldBean = box.query().equal(WordBean_.name, name).build().findFirst()
+//        // 当不存在oldBean时写入db
+//        oldBean?:box.put(this)
+        if (oldBean == null) {
+            box.put(this)
+            LogCat.d("save $name")
+        } else {
+            LogCat.d("already exist $name, skip save.")
         }
-
-        return list
     }
+
 }

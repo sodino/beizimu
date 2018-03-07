@@ -20,8 +20,8 @@ import java.nio.charset.Charset
 
 data class UrlTypeName(val type: String, val urlSuffix : String)
 fun String.getUrlTypeName() : UrlTypeName {
-    var type = "other"
-    var suffix : String? = null
+    var type : String
+    var suffix : String?
 
     when {
         this.startsWith(Const.URL.ICIBA)                -> {
@@ -44,7 +44,7 @@ fun String.getUrlTypeName() : UrlTypeName {
 fun String.getUrlBodyTag() :String {
     val queIndex = this.indexOf("?")
 
-    var lastIndex = 0
+    var lastIndex : Int
     if (queIndex <= 0) {
         // 没有带参数的url
         lastIndex = this.length
@@ -119,7 +119,7 @@ abstract class BeanCallback<T> : Callback<T> {
             val t = response.body()
             var isFilled = false
             if (t is Bean) {
-                isFilled = t.isFilled
+                isFilled = t.isFilled()
             } else if (t is String) {
                 isFilled = t.length > 0
             }

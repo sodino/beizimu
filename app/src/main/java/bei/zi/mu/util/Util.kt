@@ -14,29 +14,29 @@ import bei.zi.mu.thread.ThreadPool
  * Created by sodino on 2018/2/27.
  */
 
-fun String.iciba() {
-    // http://www.iciba.com/index.php?a=getWordMean&c=search&list=1%2C3%2C4%2C8%2C9%2C12%2C13%2C15&word=flat
-
-}
+//fun String.iciba() {
+//    // http://www.iciba.com/index.php?a=getWordMean&c=search&list=1%2C3%2C4%2C8%2C9%2C12%2C13%2C15&word=flat
+//
+//}
 
 fun String.showToast() {
-    Toast.makeText(App.myApp, this, Toast.LENGTH_SHORT).show()
+    if (Looper.myLooper() == Looper.getMainLooper()) {
+        Toast.makeText(App.myApp, this, Toast.LENGTH_SHORT).show()
+    } else {
+        ThreadPool.UIHandler.post({
+            Toast.makeText(App.myApp, this, Toast.LENGTH_SHORT).show()
+        })
+    }
+}
+
+fun Int.showToast() {
+    ((App.myApp.getText(this))as String).showToast()
 }
 
 
 
 fun Long.hexString() : String {
     return java.lang.Long.toHexString(this)
-}
-
-fun Int.showToast() {
-    if (Looper.myLooper() == Looper.getMainLooper()) {
-        Toast.makeText(App.myApp, App.myApp.getText(this), Toast.LENGTH_SHORT).show()
-    } else {
-        ThreadPool.UIHandler.post({
-            Toast.makeText(App.myApp, App.myApp.getText(this), Toast.LENGTH_SHORT).show()
-        })
-    }
 }
 
 fun Int.hexString() : String {
@@ -73,7 +73,7 @@ object Statusbar {
             val layoutParams = Class.forName("android.view.MiuiWindowManager\$LayoutParams")
             val field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE")
             val darkModeFlag = field.getInt(layoutParams)
-            val extraFlagField = baseActivity.window.javaClass.getMethod("setExtraFlags", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
+            val extraFlagField = clazz.getMethod("setExtraFlags", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
             extraFlagField.invoke(baseActivity.window, if (dark) {darkModeFlag} else {0}, darkModeFlag)
         } catch (e : Exception) {
             LogCat.e(throwable = e)

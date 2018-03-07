@@ -79,17 +79,26 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
 
     fun reqWord(word: String) {
         val api = ARetrofit.wordApi
-        var map = ARetrofit.baseQueryMap()
-        map = map.plus(Pair("word", word))
+//        var map = ARetrofit.baseQueryMap()
+//        map = map.plus(Pair("word", word))
 //        val call = api.reqIciba(map)
         val call = api.reqGithubWord(word[0].toString(), word)
         call.enqueue(object : BeanCallback<WordBean>(){
             override fun onResponse(bean: WordBean, isFilled: Boolean) {
                 LogCat.d("isFilled=${isFilled}")
+                if (isFilled) {
+                    bean.save()
+                    var strMeans = bean.name + "\n"
+                    bean.means?.forEach { strMeans += "${it.part} ${it.mean}\n" }
+                    strMeans.showToast()
+                } else {
+                    "$word isFilled=false".showToast()
+                }
             }
 
             override fun onFailure(call: Call<WordBean>, t: Throwable?, response: Response<*>?, respCode: Int) {
                 LogCat.d("respCode=${respCode}")
+                "$word failure, respCode=$respCode".showToast()
             }
         })
     }
