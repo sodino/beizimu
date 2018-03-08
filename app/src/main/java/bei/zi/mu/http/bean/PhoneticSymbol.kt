@@ -1,6 +1,6 @@
 package bei.zi.mu.http.bean
 
-import io.objectbox.annotation.Backlink
+import io.objectbox.Property
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
@@ -19,8 +19,20 @@ data class PhoneticSymbol(
         var am_map3             : String?               = null,
         var tts_mp3             : String?               = null,
         var word                : ToOne<WordBean>?      = null
-        ) : BeanInterface {
-        override fun isFilled(): Boolean {
+        ) : Bean<PhoneticSymbol>() {
+    override fun primaryStringKey(): Property {
+        return None
+    }
+
+    override fun primaryStringValue(): String {
+        return ""
+    }
+
+    override fun updateOldBean(oldBean: PhoneticSymbol) : PhoneticSymbol{
+        return oldBean
+    }
+
+    override fun isFilled(): Boolean {
             val result = en?.isNotEmpty()?:false
             || en_mp3?.isNotEmpty()?:false
             || am?.isNotEmpty()?:false

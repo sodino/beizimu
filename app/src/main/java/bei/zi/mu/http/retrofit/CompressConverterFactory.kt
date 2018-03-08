@@ -43,7 +43,7 @@ open class CompressConverterFactory : Converter.Factory() {
                 return responseBodyString as T
             }
             val bean = typeToken.rawType.newInstance()
-            if (bean is Bean) {
+            if (bean is Bean<*>) {
                 bean.parse(responseBodyString)
                 return bean as T
             }

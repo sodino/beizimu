@@ -1,5 +1,6 @@
 package bei.zi.mu.http.bean
 
+import io.objectbox.Property
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
@@ -17,7 +18,18 @@ data class MemoryBean(
         var okPhonetic       : Boolean           = false,        // true: 记得音标
         var okMean           : Boolean           = false,        // true: 记得该单词的意思
         var word             : ToOne<WordBean>?  = null
-) : BeanInterface{
+) : Bean<MemoryBean> () {
+    override fun primaryStringKey(): Property {
+        return None
+    }
+
+    override fun primaryStringValue(): String {
+        return ""
+    }
+
+    override fun updateOldBean(oldBean: MemoryBean) : MemoryBean {
+        return oldBean
+    }
 
     override fun isFilled(): Boolean {
         return tCreate > 0

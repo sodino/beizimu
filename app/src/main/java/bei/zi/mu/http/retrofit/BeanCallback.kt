@@ -118,7 +118,7 @@ abstract class BeanCallback<T> : Callback<T> {
         if (respCode == HttpURLConnection.HTTP_OK) {
             val t = response.body()
             var isFilled = false
-            if (t is Bean) {
+            if (t is Bean<*>) {
                 isFilled = t.isFilled()
             } else if (t is String) {
                 isFilled = t.length > 0

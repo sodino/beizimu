@@ -1,8 +1,8 @@
 package bei.zi.mu.http.bean
 
 import android.text.TextUtils
-import bei.zi.mu.App
 import bei.zi.mu.LogCat
+import io.objectbox.Property
 import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
@@ -33,7 +33,8 @@ data class WordBean(
         @Backlink(to = "word")
         var memory                  : ToMany<MemoryBean>?       = null, // 记忆、复习次数、时间等信息
         var tag                     : String?                   = null  // cet4,cet6,tofel,kaoyan等...
-        ) : Bean() {
+        ) : Bean<WordBean>() {
+
     override fun isFilled(): Boolean {
 //        val bName = !TextUtils.isEmpty(name)
 //        val bPhonetic = phoneticSymbol?.target?.isFilled()
@@ -112,8 +113,7 @@ data class WordBean(
     fun save(updateMemory : Boolean = false,
              okPhonetic : Boolean = false,
              okMean : Boolean = false) {
-        val box = App.myApp.boxStore.boxFor(WordBean::class.java)
-        val oldBean = box.query().equal(WordBean_.name, name).build().findFirst()
+        val oldBean = findByPrimary<WordBean>(name?:"")
         val now = System.currentTimeMillis()
         if (oldBean == null) {
             // 当不存在oldBean时写入db
@@ -123,7 +123,8 @@ data class WordBean(
                     okPhonetic = okPhonetic,
                     okMean = okMean)
             memory?.add(memBean)
-            box.put(this)
+//            val box = App.myApp.boxStore.boxFor(WordBean::class.java)
+            insertOrUpdate()
             LogCat.d("save $name")
         } else {
             if (updateMemory) {
@@ -143,9 +144,42 @@ data class WordBean(
 
                 memory?.clear()
                 memory?.add(memBean)
-                box.put(this)
+                insertOrUpdate()
             }
             LogCat.d("already exist $name, update memory.")
         }
+    }
+
+    override fun primaryStringKey(): Property {
+        return WordBean_.name
+    }
+
+    override fun primaryStringValue(): String {
+        return name?:""
+    }
+
+    override fun updateOldBean(oldBean: WordBean) : WordBean {
+        val myMemory = memory
+        val oldMemory = oldBean.memory
+        if (oldMemory != null && myMemory?.isNotEmpty() == true) {
+            oldMemory.addAll(myMemory.toList())
+        }
+
+        return oldBean
+    }
+
+    fun initMemoryBean() {
+        if (findByPrimary<WordBean>(name?:"") != null) {
+            // 已经有存储过了，就不必再初始化MemoryBean了
+            return
+        }
+        val now = System.currentTimeMillis()
+        // 当不存在oldBean时写入db
+        val memBean = MemoryBean(tCreate = now,
+                tLastReview = now,
+                reviewNum = 1,
+                okPhonetic = false,
+                okMean = false)
+        memory?.add(memBean)
     }
 }

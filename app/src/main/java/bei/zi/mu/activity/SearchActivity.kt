@@ -91,10 +91,16 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
                 }
 
                 (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-                reqWord(word)
+                searchWord(word)
             }
         }
         return true
+    }
+
+    fun searchWord(word : String) {
+//        val findBean = WordBean.findWord(word)
+        reqWord(word)
+
     }
 
     fun reqWord(word: String) {
@@ -107,7 +113,8 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
             override fun onResponse(bean: WordBean, isFilled: Boolean) {
                 LogCat.d("isFilled=${isFilled}")
                 if (isFilled) {
-                    bean.save()
+                    bean.initMemoryBean()
+                    bean.insertOrUpdate()
                     var strMeans = bean.name + "\n"
                     bean.means?.forEach { strMeans += "${it.part} ${it.mean}\n" }
 

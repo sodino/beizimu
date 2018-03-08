@@ -1,5 +1,6 @@
 package bei.zi.mu.http.bean
 
+import io.objectbox.Property
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
@@ -17,7 +18,18 @@ data class MeansBean(
         var part        : String                = "",   // "n."  "vt."
         var mean        : String                = "",
         var word        : ToOne<WordBean>?      = null
-        ) : BeanInterface {
+        ) :Bean<MeansBean> () {
+    override fun primaryStringKey(): Property {
+        return None
+    }
+
+    override fun primaryStringValue(): String {
+        return ""
+    }
+
+    override fun updateOldBean(oldBean: MeansBean) : MeansBean {
+        return oldBean
+    }
 
     companion object {
         fun parse(jsonMeans: JSONArray) : List<MeansBean> {
@@ -32,7 +44,7 @@ data class MeansBean(
                 var strMeans = ""
                 for (j in 0 until lPartMeans) {
                     if (strMeans.length > 0) {
-                        strMeans += "; "
+                        strMeans += "\n"
                     }
                     strMeans += jsonPartMeans.get(j).toString()
                 }
