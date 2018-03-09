@@ -5,12 +5,18 @@ import android.util.AndroidRuntimeException
 
 import bei.zi.mu.App
 import io.objectbox.Property
+import io.objectbox.annotation.Id
 
 /**
  * Created by sodino on 2018/3/8.
  */
 
-abstract class Bean<T> {
+abstract class Bean<T>{
+    var _id : Long
+        get() {
+            return javaClass.getMethod("getId").invoke(this) as Long
+        }
+        private set(id : Long) {}
 
     var code = -1
     var message = ""
