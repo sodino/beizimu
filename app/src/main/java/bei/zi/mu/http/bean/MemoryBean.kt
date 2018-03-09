@@ -27,8 +27,8 @@ data class MemoryBean(
         return ""
     }
 
-    override fun updateOldBean(oldBean: MemoryBean) : MemoryBean {
-        return oldBean
+    override fun updateDbBean(dbBean: MemoryBean) : MemoryBean {
+        return dbBean
     }
 
     override fun isFilled(): Boolean {

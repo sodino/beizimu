@@ -6,7 +6,7 @@ import io.objectbox.Property
  * Created by sodino on 2018/3/4.
  */
 class ErrorBean : Bean<Nothing>() {
-    override fun updateOldBean(oldBean: Nothing) : Nothing{
+    override fun updateDbBean(oldBean: Nothing) : Nothing{
         throw kotlin.UnsupportedOperationException("Not supported for ErrorBean")
     }
 

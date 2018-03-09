@@ -158,14 +158,14 @@ data class WordBean(
         return name?:""
     }
 
-    override fun updateOldBean(oldBean: WordBean) : WordBean {
+    override fun updateDbBean(dbBean: WordBean) : WordBean {
         val myMemory = memory
-        val oldMemory = oldBean.memory
+        val oldMemory = dbBean.memory
         if (oldMemory != null && myMemory?.isNotEmpty() == true) {
             oldMemory.addAll(myMemory.toList())
         }
 
-        return oldBean
+        return dbBean
     }
 
     fun initMemoryBean() {

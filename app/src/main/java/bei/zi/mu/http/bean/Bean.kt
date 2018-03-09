@@ -19,7 +19,7 @@ abstract class Bean<T> {
 
     abstract fun primaryStringKey(): Property
     abstract fun primaryStringValue() : String
-    abstract fun updateOldBean(oldBean : T) : T
+    abstract fun updateDbBean(dbBean : T) : T
 
     /** true:真正取到数据，各种list或bean不会为空。false:具体的list.size==0或bean为null.  */
     abstract fun isFilled() : Boolean
@@ -57,7 +57,7 @@ abstract class Bean<T> {
         if (bean == null) {
             save()
         } else {
-            val updateBean = updateOldBean(bean as T)
+            val updateBean = updateDbBean(bean as T)
             if (bean !== updateBean) {
                 throw AndroidRuntimeException("please update and return oldBean, NOT other bean!")
             }

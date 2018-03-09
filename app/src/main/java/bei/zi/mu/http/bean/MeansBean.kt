@@ -27,8 +27,8 @@ data class MeansBean(
         return ""
     }
 
-    override fun updateOldBean(oldBean: MeansBean) : MeansBean {
-        return oldBean
+    override fun updateDbBean(dbBean: MeansBean) : MeansBean {
+        return dbBean
     }
 
     companion object {

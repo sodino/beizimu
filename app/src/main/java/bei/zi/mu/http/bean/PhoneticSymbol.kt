@@ -28,8 +28,8 @@ data class PhoneticSymbol(
         return ""
     }
 
-    override fun updateOldBean(oldBean: PhoneticSymbol) : PhoneticSymbol{
-        return oldBean
+    override fun updateDbBean(dbBean: PhoneticSymbol) : PhoneticSymbol{
+        return dbBean
     }
 
     override fun isFilled(): Boolean {

@@ -45,8 +45,8 @@ data class ExchangeBean(
         return ""
     }
 
-    override fun updateOldBean(oldBean: ExchangeBean) : ExchangeBean {
-        return oldBean
+    override fun updateDbBean(dbBean: ExchangeBean) : ExchangeBean {
+        return dbBean
     }
 
     override fun isFilled(): Boolean {
