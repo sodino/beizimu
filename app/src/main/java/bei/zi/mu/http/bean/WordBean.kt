@@ -166,7 +166,7 @@ data class WordBean(
 //            oldMemory.addAll(myMemory.toList())
 //        }
 
-        // 第二种：直接copy
+        // 第二种：直接copy，但不复制id。
         val newBean = dbBean.copy(name = name, frequence = frequence,
                 phoneticSymbol = phoneticSymbol, means = means,
                 exchanges = exchanges, memory = memory,
