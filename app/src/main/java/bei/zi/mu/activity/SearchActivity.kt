@@ -22,6 +22,8 @@ import bei.zi.mu.http.bean.WordBean
 import bei.zi.mu.http.retrofit.ARetrofit
 import bei.zi.mu.http.retrofit.BeanCallback
 import bei.zi.mu.util.showToast
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.search_activity.*
 import retrofit2.Call
 import retrofit2.Response
@@ -104,6 +106,12 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
     }
 
     fun reqWord(word: String) {
+        var single = Single.just(word)
+        single = single.subscribeOn(Schedulers.io())
+//        single.do
+    }
+
+    fun reqWordByBeanCallback(word: String) {
         val api = ARetrofit.wordApi
 //        var map = ARetrofit.baseQueryMap()
 //        map = map.plus(Pair("word", word))

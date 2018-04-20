@@ -33,7 +33,7 @@ data class WordBean(
         @Backlink(to = "word")
         var memory                  : ToMany<MemoryBean>?       = null, // 记忆、复习次数、时间等信息
         var tag                     : String?                   = null  // cet4,cet6,tofel,kaoyan等...
-        ) : Bean<WordBean>() {
+        ) : Bean<WordBean, String>() {
 
     override fun isFilled(): Boolean {
 //        val bName = !TextUtils.isEmpty(name)
@@ -150,22 +150,29 @@ data class WordBean(
         }
     }
 
-    override fun primaryStringKey(): Property {
+    override fun primaryKey(): Property {
         return WordBean_.name
     }
 
-    override fun primaryStringValue(): String {
-        return name?:""
+    override fun primaryValue(): String {
+        return name ?: ""
     }
 
     override fun updateDbBean(dbBean: WordBean) : WordBean {
-        val myMemory = memory
-        val oldMemory = dbBean.memory
-        if (oldMemory != null && myMemory?.isNotEmpty() == true) {
-            oldMemory.addAll(myMemory.toList())
-        }
+        // 第一种：自己复制
+//        val myMemory = memory
+//        val oldMemory = dbBean.memory
+//        if (oldMemory != null && myMemory?.isNotEmpty() == true) {
+//            oldMemory.addAll(myMemory.toList())
+//        }
 
-        return dbBean
+        // 第二种：直接copy
+        val newBean = dbBean.copy(name = name, frequence = frequence,
+                phoneticSymbol = phoneticSymbol, means = means,
+                exchanges = exchanges, memory = memory,
+                tag = tag)
+
+        return newBean
     }
 
     fun initMemoryBean() {

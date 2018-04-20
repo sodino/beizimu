@@ -19,13 +19,13 @@ data class PhoneticSymbol(
         var am_map3             : String?               = null,
         var tts_mp3             : String?               = null,
         var word                : ToOne<WordBean>?      = null
-        ) : Bean<PhoneticSymbol>() {
-    override fun primaryStringKey(): Property {
+        ) : Bean<PhoneticSymbol, Long>() {
+    override fun primaryKey(): Property {
         return None
     }
 
-    override fun primaryStringValue(): String {
-        return ""
+    override fun primaryValue(): Long {
+        return id
     }
 
     override fun updateDbBean(dbBean: PhoneticSymbol) : PhoneticSymbol{

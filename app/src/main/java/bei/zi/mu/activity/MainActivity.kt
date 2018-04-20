@@ -61,6 +61,9 @@ class MainActivity : TitlebarActivity(), ViewPager.OnPageChangeListener, TabLayo
     }
 
 
+    fun test() {
+    }
+
     private fun showMain() {
         window.setBackgroundDrawableResource(R.drawable.activity_white_bg)
         setContentView(R.layout.activity_main)

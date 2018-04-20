@@ -18,13 +18,13 @@ data class MeansBean(
         var part        : String                = "",   // "n."  "vt."
         var mean        : String                = "",
         var word        : ToOne<WordBean>?      = null
-        ) :Bean<MeansBean> () {
-    override fun primaryStringKey(): Property {
+        ) :Bean<MeansBean, Long> () {
+    override fun primaryKey(): Property {
         return None
     }
 
-    override fun primaryStringValue(): String {
-        return ""
+    override fun primaryValue(): Long {
+        return id
     }
 
     override fun updateDbBean(dbBean: MeansBean) : MeansBean {
