@@ -16,10 +16,12 @@ data class PhoneticSymbol(
         var en                  : String?               = null, // phonetic symbol english
         var en_mp3              : String?               = null,
         var am                  : String?               = null, // phonetic symbol american
-        var am_map3             : String?               = null,
+        var am_mp3              : String?               = null,
         var tts_mp3             : String?               = null,
         var word                : ToOne<WordBean>?      = null
         ) : Bean<PhoneticSymbol, Long>() {
+
+
     override fun primaryKey(): Property {
         return None
     }
@@ -36,23 +38,26 @@ data class PhoneticSymbol(
             val result = en?.isNotEmpty()?:false
             || en_mp3?.isNotEmpty()?:false
             || am?.isNotEmpty()?:false
-            || am_map3?.isNotEmpty()?:false
+            || am_mp3?.isNotEmpty()?:false
             || tts_mp3?.isNotEmpty()?:false
 
             return result
         }
 
-        companion object {
-            fun parse(json : JSONObject) : PhoneticSymbol {
-                val ph_en = json.optString("ph_en")
-                val ph_en_mp3 = json.optString("ph_en_mp3")
-                val ph_am = json.optString("ph_am")
-                val ph_am_mp3 = json.optString("ph_am_mp3")
-                val ph_tts_mp3 = json.optString("ph_tts_mp3")
+    companion object {
+        const val EN        = 0
+        const val AM        = 1
 
-                return PhoneticSymbol(en = ph_en, en_mp3 = ph_en_mp3,
-                        am = ph_am, am_map3 = ph_am_mp3,
-                        tts_mp3 = ph_tts_mp3)
-            }
+        fun parse(json : JSONObject) : PhoneticSymbol {
+            val ph_en = json.optString("ph_en")
+            val ph_en_mp3 = json.optString("ph_en_mp3")
+            val ph_am = json.optString("ph_am")
+            val ph_am_mp3 = json.optString("ph_am_mp3")
+            val ph_tts_mp3 = json.optString("ph_tts_mp3")
+
+            return PhoneticSymbol(en = ph_en, en_mp3 = ph_en_mp3,
+                    am = ph_am, am_mp3 = ph_am_mp3,
+                    tts_mp3 = ph_tts_mp3)
         }
+    }
 }

@@ -18,15 +18,15 @@ import bei.zi.mu.Const
 import bei.zi.mu.LogCat
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
+import bei.zi.mu.http.bean.PhoneticSymbol
 import bei.zi.mu.http.bean.WordBean
 import bei.zi.mu.http.retrofit.ARetrofit
-import bei.zi.mu.http.retrofit.BeanCallback
+import bei.zi.mu.util.playMp3
 import bei.zi.mu.util.showToast
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.search_activity.*
-import retrofit2.Call
-import retrofit2.Response
 
 /**
  * Created by sodino on 2018/3/4.
@@ -36,8 +36,6 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
 
     lateinit var editWord   : EditText
     var wordBean            : WordBean? = null
-    val handler                         = Handler(this@SearchActivity)
-
 
     companion object {
         fun launch(context : Context) {
@@ -79,7 +77,9 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
 
     override fun onClick(v: View) {
         when(v.id) {
-            R.id.txtCancel -> { finish() }
+            R.id.txtCancel      -> { finish() }
+            R.id.txtPhoneticAm  -> { wordBean?.phoneticSymbol?.get(0)?.playMp3(PhoneticSymbol.AM) }
+            R.id.txtPhoneticEn  -> { wordBean?.phoneticSymbol?.get(0)?.playMp3(PhoneticSymbol.EN) }
         }
     }
 
@@ -101,44 +101,35 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
 
     fun searchWord(word : String) {
 //        val findBean = WordBean.findWord(word)
-        reqWord(word)
+//        reqWord(word)
 
-    }
-
-    fun reqWord(word: String) {
-        var single = Single.just(word)
-        single = single.subscribeOn(Schedulers.io())
-//        single.do
-    }
-
-    fun reqWordByBeanCallback(word: String) {
-        val api = ARetrofit.wordApi
-//        var map = ARetrofit.baseQueryMap()
-//        map = map.plus(Pair("word", word))
-//        val call = api.reqIciba(map)
-        val call = api.reqGithubWord(word[0].toString(), word)
-        call.enqueue(object : BeanCallback<WordBean>(false) {
-            override fun onResponse(bean: WordBean, isFilled: Boolean) {
-                LogCat.d("isFilled=${isFilled}")
-                if (isFilled) {
-                    bean.initMemoryBean()
-                    bean.insertOrUpdate()
-                    var strMeans = bean.name + "\n"
-                    bean.means?.forEach { strMeans += "${it.part} ${it.mean}\n" }
-
-
-                    val msg = Message.obtain(handler, MSG_SHOW_WORD, bean)
-                    msg.sendToTarget()
-                } else {
-                    "$word isFilled=false".showToast()
-                }
-            }
-
-            override fun onFailure(call: Call<WordBean>, t: Throwable?, response: Response<*>?, respCode: Int) {
-                LogCat.d("respCode=${respCode}")
-                "$word failure, respCode=$respCode".showToast()
-            }
-        })
+        Single.just(word)
+                .map{
+                    val findResult = WordBean.findFirstByPrimaryKey(word)
+                    if (findResult != null) {
+                        findResult
+                    } else {
+                        val resp = ARetrofit.wordApi.reqGithubWord(word[0].toString(), word).execute()
+                        val bean = resp.body()
+                        if (bean?.isFilled() == true) {
+                            bean?.initMemoryBean()
+                            bean?.insertOrUpdate()
+                        }
+                        bean
+                    }
+                }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    // onSuccess
+                    if (it != null) {
+                        wordBean = it
+                        showWordDetail(it)
+                    }
+                }, {
+                    // onError
+                    LogCat.e("searchWord [$word] errors", it)
+                    "$word failure[${it.javaClass}:${it.message}]".showToast()
+                })
     }
 
     private fun showWordDetail(bean: WordBean) {

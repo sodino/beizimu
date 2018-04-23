@@ -35,6 +35,14 @@ data class WordBean(
         var tag                     : String?                   = null  // cet4,cet6,tofel,kaoyan等...
         ) : Bean<WordBean, String>() {
 
+    companion object {
+        public fun findFirstByPrimaryKey(value : String) : WordBean?{
+            val clazz = WordBean::class.java
+            val property = WordBean_.name
+            return findFirstByPrimaryKey<WordBean, String>(clazz, property, value)
+        }
+    }
+
     override fun isFilled(): Boolean {
 //        val bName = !TextUtils.isEmpty(name)
 //        val bPhonetic = phoneticSymbol?.target?.isFilled()

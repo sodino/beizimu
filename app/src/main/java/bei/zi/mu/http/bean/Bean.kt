@@ -1,11 +1,16 @@
 package bei.zi.mu.http.bean
 
 import android.util.AndroidRuntimeException
+import android.util.Log
 
 import bei.zi.mu.App
 import io.objectbox.Property
 
 /**
+ *
+ * TODO : proguard混淆配置
+ * 1. getId()
+ * 1. primaryKey()
  * Created by sodino on 2018/3/8.
  */
 
@@ -30,7 +35,30 @@ abstract class Bean<T, PrimaryType>{
     abstract fun isFilled() : Boolean
 
     companion object {
-        val None = Property(0, 0, String::class.java, "none")
+        public val None = Property(0, 0, String::class.java, "none")
+
+        public fun <BeanType, ValueType>findFirstByPrimaryKey(clazz : Class<*>, key : Property, value : ValueType) : BeanType?{
+            if (value == null) {
+                return null
+            }
+
+            val tValue : Any = value
+            val box = App.myApp.boxStore.boxFor(clazz)
+            val queryBuilder = box.query()
+            when(tValue) {
+                is Long     -> {queryBuilder.equal(key, tValue)}
+                is Boolean  -> {queryBuilder.equal(key, tValue)}
+                is String   -> {queryBuilder.equal(key, tValue)}
+                else        -> {
+                    throw AndroidRuntimeException("Primary Type not support ${tValue::class.java}")
+                }
+            }
+
+
+            val result = queryBuilder.build().findFirst()
+
+            return if (result != null) (result as BeanType) else null
+        }
     }
 
 
@@ -64,11 +92,11 @@ abstract class Bean<T, PrimaryType>{
         }
     }
 
-    fun insertOrUpdate() {
+    public fun insertOrUpdate() {
         // fixed 主键id为0时，为新对象；不为0时，为数据库中实例化的或assignable=true的情况。
-        // TODO id = 0 时需要findByPrimary()查找一下； id不为0时可以直接save()
-        // TODO save()的情况要考虑该class中的ToMany 或 ToOne 有可能也是刚new出来而不是从数据库取出来的，仍然会造成重复
-        // TODO 看是不是要java反射遍历ToMany或ToOne中的实例链
+        // id = 0 时需要findByPrimary()查找一下； id不为0时可以直接save()
+        // save()的情况要考虑该class中的ToMany 或 ToOne 有可能也是刚new出来而不是从数据库取出来的，仍然会造成重复
+        // 看是不是要java反射遍历ToMany或ToOne中的实例链
         if (_id != 0L) {
             save()
         } else {
@@ -87,5 +115,32 @@ abstract class Bean<T, PrimaryType>{
                 save(updateBean as Bean<T, PrimaryType>)
             }
         }
+    }
+
+
+
+    public fun <ValueType>findFirstByPrimaryKey(value : ValueType) : T? {
+        if (value == null) {
+            return null
+        }
+
+
+        val tValue : Any = value
+        val box = App.myApp.boxStore.boxFor(javaClass)
+        val queryBuilder = box.query()
+        val key = primaryKey()
+        when(value) {
+            is Long     -> {queryBuilder.equal(key, value)}
+            is Boolean  -> {queryBuilder.equal(key, value)}
+            is String   -> {queryBuilder.equal(key, value)}
+            else        -> {
+                throw AndroidRuntimeException("Primary Type not support ${tValue::class.java}")
+            }
+        }
+
+
+        val result = queryBuilder.build().findFirst()
+
+        return if (result != null) (result as T) else null
     }
 }

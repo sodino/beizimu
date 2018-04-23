@@ -1,5 +1,6 @@
 package bei.zi.mu.activity
 
+import android.Manifest
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
@@ -11,6 +12,8 @@ import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
 import bei.zi.mu.adapter.MainAdapter
 import bei.zi.mu.thread.ThreadPool
+import com.yanzhenjie.permission.Action
+import com.yanzhenjie.permission.AndPermission
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.word_card_titlebar.*
 
@@ -39,6 +42,33 @@ class MainActivity : TitlebarActivity(), ViewPager.OnPageChangeListener, TabLayo
             SHOW_SPLASH ->  {showSplash()}
             else        ->  {showMain()}
         }
+        showPermissionDialog()
+    }
+
+    private fun showPermissionDialog() {
+        AndPermission.with(this)
+                .permission(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.INTERNET)
+                .onGranted(object : Action {
+                    override fun onAction(permissions: List<String>) {
+//                        SecurityTask().execute()
+                    }
+                })
+                .onDenied(object : Action {
+                    override fun onAction(permissions: List<String>) {
+                        if (AndPermission.hasAlwaysDeniedPermission(this@MainActivity, permissions)) {
+//                            // 这里使用一个Dialog展示没有这些权限应用程序无法继续运行，询问用户是否去设置中授权。
+//                            BECDialog.newBuilder(this@MainActivity)
+//                                    .setText(getString(R.string.permission_message))
+//                                    .setPositive(getString(R.string.permission_execute), View.OnClickListener {
+//                                        // 如果用户同意去设置：
+//                                        val settingService = AndPermission.permissionSetting(this@MainActivity)
+//                                        settingService.execute()
+//                                    })
+//                                    .setNegative(getString(android.R.string.cancel), null)
+//                                    .show()
+                        }
+                    }
+                }).start()
     }
 
     override fun createTitlebar(parentLayout: LinearLayout): View {
@@ -58,6 +88,7 @@ class MainActivity : TitlebarActivity(), ViewPager.OnPageChangeListener, TabLayo
                 SearchActivity.launch(this)
             }
         }
+
     }
 
 

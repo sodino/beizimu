@@ -1,5 +1,8 @@
 package bei.zi.mu
 
+import android.util.AndroidRuntimeException
+import bei.zi.mu.http.bean.PhoneticSymbol
+
 /**
  * Created by sodino on 2018/3/4.
  */
@@ -7,6 +10,23 @@ class Const {
     object URL{
         const val ICIBA                    = "http://www.iciba.com/"
         const val GITHUB_USER_CONTENT      = "https://raw.githubusercontent.com/"
+    }
+
+    object SDCard {
+        const val APP                      = "/sdcard/beizimu/"
+        const val mp3                      = "${APP}/mp3/"
+        const val tmpFolder                = "$APP/.tmpFolder/"
+
+        fun mp3Path(word : String, type : Int) : String {
+            if (word.isEmpty()) {
+                throw AndroidRuntimeException("word.length must > 1")
+            }
+            return "$mp3${word[0]}/${word}_${if(type==PhoneticSymbol.AM) "am" else "en"}.mp3"
+        }
+
+        fun newTmpPath(): String {
+            return "${Const.SDCard.tmpFolder}${System.currentTimeMillis()}.tmp"
+        }
     }
 
     object WordTag{
