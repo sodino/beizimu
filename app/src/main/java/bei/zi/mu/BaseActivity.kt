@@ -68,6 +68,12 @@ open class BaseActivity : FragmentActivity() {
         }
     }
 
+    @SuppressLint("MissingSuperCall")
+    public override fun onSaveInstanceState(outState: Bundle?) {
+        // 注释掉super,否则二级Activity崩溃的话，首页Fragment会白屏（华为、美图手机上）
+        //        super.onSaveInstanceState(outState);
+    }
+
     open fun setStatusbarBackgroundGone() {
         val vStatusbarBackground = viewStatusbarBackground
 
