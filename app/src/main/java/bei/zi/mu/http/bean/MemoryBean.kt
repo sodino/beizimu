@@ -20,7 +20,7 @@ data class MemoryBean(
         var word             : ToOne<WordBean>?  = null
 ) : Bean<MemoryBean, Long> () {
     override fun primaryKey(): Property {
-        return None
+        return MemoryBean_.id
     }
 
     override fun primaryValue(): Long {
@@ -28,7 +28,11 @@ data class MemoryBean(
     }
 
     override fun updateDbBean(dbBean: MemoryBean) : MemoryBean {
-        return dbBean
+        // 第二种：直接copy，但不复制id & tCreate
+        return dbBean.copy(tLastReview = tLastReview,
+                reviewNum = reviewNum,
+                okPhonetic = okPhonetic,
+                okMean = okMean)
     }
 
     override fun isFilled(): Boolean {

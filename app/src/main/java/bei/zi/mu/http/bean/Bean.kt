@@ -97,7 +97,7 @@ abstract class Bean<T, PrimaryType>{
         // id = 0 时需要findByPrimary()查找一下； id不为0时可以直接save()
         // save()的情况要考虑该class中的ToMany 或 ToOne 有可能也是刚new出来而不是从数据库取出来的，仍然会造成重复
         // 看是不是要java反射遍历ToMany或ToOne中的实例链
-        if (_id != 0L) {
+        if (_id == 0L) {
             save()
         } else {
             val bean = findByPrimary<T>(primaryValue())

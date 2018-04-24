@@ -6,4 +6,7 @@
     <string name="cancel">Cancel</string>
     <string name="search_hint">enter a word</string>
     <string name="error_network">The network is not available, please check the network settings!</string>
+    <string name="phoneticHint">phonetic\n↓ ↓</string>
+    <string name="meansHint">means\n↓ ↓</string>
+    <string name="next">Next</string>
 </resources>

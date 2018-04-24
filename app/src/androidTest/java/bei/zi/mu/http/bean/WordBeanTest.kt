@@ -71,4 +71,31 @@ class WordBeanTest {
         assertTrue(findResult?.tag.equals("cet4"))
         assertTrue(findResult?.frequence == 5)
     }
+
+    @Test
+    fun testUpdateMemory() {
+        val box = App.myApp.boxStore.boxFor(WordBean::class.java)
+        val bean = WordBean(name = "apple")
+        bean.initMemoryBean()
+        bean.insertOrUpdate()
+
+        assertTrue(box.count() == 1L)
+
+        val bean1 = box.all?.get(0)
+        assertTrue(box.all.size == 1)
+        assertTrue("apple" == bean1?.name)
+        assertTrue(bean1?.memory?.size == 1)
+
+        val oldReviewTime = bean1?.memory?.get(0)?.tLastReview ?: 0L
+        bean1?.updateMemory()
+
+        val bean2 = box.query().equal(WordBean_.name, "apple").build().findFirst()
+        assertTrue("apple" == bean2?.name)
+        assertTrue(bean2?.memory?.size == 1)
+
+        val newReviewTime = bean2?.memory?.get(0)?.tLastReview  ?: 0L
+
+        assertTrue(newReviewTime > oldReviewTime)
+
+    }
 }

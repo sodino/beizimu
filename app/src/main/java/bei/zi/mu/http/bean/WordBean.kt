@@ -1,6 +1,7 @@
 package bei.zi.mu.http.bean
 
 import android.text.TextUtils
+import bei.zi.mu.App
 import bei.zi.mu.LogCat
 import io.objectbox.Property
 import io.objectbox.annotation.Backlink
@@ -40,6 +41,18 @@ data class WordBean(
             val clazz = WordBean::class.java
             val property = WordBean_.name
             return findFirstByPrimaryKey<WordBean, String>(clazz, property, value)
+        }
+
+        /** 寻找最久远的未复习的单词 */
+        public fun find4WordCard() : WordBean? {
+            val box = App.myApp.boxStore.boxFor(MemoryBean::class.java)
+            val result = box.query()
+                .order(MemoryBean_.tLastReview)
+                .order(MemoryBean_.tCreate)
+                .build()
+                .findFirst()
+
+            return result?.word?.target ?: null
         }
     }
 
@@ -115,48 +128,6 @@ data class WordBean(
         return result
     }
 
-    /**
-     * @param updateMemory : true:之前有存储过该单词的情况下，允许更新记忆数据
-     * */
-    fun save(updateMemory : Boolean = false,
-             okPhonetic : Boolean = false,
-             okMean : Boolean = false) {
-        val oldBean = findByPrimary<WordBean>(name?:"")
-        val now = System.currentTimeMillis()
-        if (oldBean == null) {
-            // 当不存在oldBean时写入db
-            val memBean = MemoryBean(tCreate = now,
-                    tLastReview = now,
-                    reviewNum = 1,
-                    okPhonetic = okPhonetic,
-                    okMean = okMean)
-            memory?.add(memBean)
-//            val box = App.myApp.boxStore.boxFor(WordBean::class.java)
-            insertOrUpdate()
-            LogCat.d("save $name")
-        } else {
-            if (updateMemory) {
-                var memBean = oldBean.memory?.get(0)
-                if (memBean == null) {
-                    memBean = MemoryBean(tCreate = now,
-                            tLastReview = now,
-                            reviewNum = 1,
-                            okPhonetic = okPhonetic,
-                            okMean = okMean)
-                } else {
-                    memBean = memBean.copy(tLastReview = now,
-                            reviewNum = memBean.reviewNum + 1,
-                            okPhonetic = okPhonetic,
-                            okMean = okMean)
-                }
-
-                memory?.clear()
-                memory?.add(memBean)
-                insertOrUpdate()
-            }
-            LogCat.d("already exist $name, update memory.")
-        }
-    }
 
     override fun primaryKey(): Property {
         return WordBean_.name
@@ -196,5 +167,20 @@ data class WordBean(
                 okPhonetic = false,
                 okMean = false)
         memory?.add(memBean)
+    }
+
+    fun updateMemory(okPhonetic : Boolean = false, okMean : Boolean = false) {
+        val memoryBean = memory?.get(0)
+        if (memoryBean != null) {
+            memoryBean.tLastReview = System.currentTimeMillis()
+            memoryBean.reviewNum ++
+            memoryBean.okPhonetic = okPhonetic
+            memoryBean.okMean = okMean
+
+            // 更新memoryBean
+            // insertOrUpdate()无效，不会更新到memoryBean
+//            insertOrUpdate()
+            memoryBean.insertOrUpdate()
+        }
     }
 }

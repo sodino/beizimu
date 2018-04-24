@@ -133,7 +133,7 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
     }
 
     private fun showWordDetail(bean: WordBean) {
-        txtWord.setText(bean.name)
+        txtWord.text = bean.name
         barRating.visibility = View.VISIBLE
         barRating.rating = bean.frequence.toFloat()
 
@@ -141,8 +141,8 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
             val phonetic = bean.phoneticSymbol?.get(0)
 
             layoutPhonetic.visibility = View.VISIBLE
-            txtPhoneticEn.setText("en\n[${phonetic?.en}]")
-            txtPhoneticAm.setText("am\n[${phonetic?.am}]")
+            txtPhoneticEn.text = "en\n[${phonetic?.en}]"
+            txtPhoneticAm.text = "am\n[${phonetic?.am}]"
 
             txtPhoneticEn.setOnClickListener(this@SearchActivity)
             txtPhoneticAm.setOnClickListener(this@SearchActivity)
