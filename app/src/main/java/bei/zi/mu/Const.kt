@@ -12,6 +12,10 @@ class Const {
         const val GITHUB_USER_CONTENT      = "https://raw.githubusercontent.com/"
     }
 
+    object Param {
+        const val I_TYPE                   = "type"
+    }
+
     object SDCard {
         const val APP                      = "/sdcard/beizimu/"
         const val mp3                      = "${APP}/mp3/"

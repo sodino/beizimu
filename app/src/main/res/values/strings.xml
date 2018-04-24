@@ -9,4 +9,10 @@
     <string name="phoneticHint">phonetic\n↓ ↓</string>
     <string name="meansHint">means\n↓ ↓</string>
     <string name="next">Next</string>
+    <string name="recent100">Recent 100</string>
+    <string name="kaoYan">考研</string>
+    <string name="GRE">GRE</string>
+    <string name="TOEFL">TOEFL</string>
+    <string name="CET6">CET6</string>
+    <string name="CET4">CET4</string>
 </resources>
