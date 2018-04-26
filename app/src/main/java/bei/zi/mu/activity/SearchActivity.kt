@@ -149,4 +149,9 @@ public class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView
             dlgSearching.dismiss()
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
+    }
 }

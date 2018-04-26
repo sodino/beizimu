@@ -17,4 +17,6 @@ public abstract class BasePresenter<View>(v : BaseView) {
             v as View
         }
     }
+
+    public abstract fun onDestroy()
 }

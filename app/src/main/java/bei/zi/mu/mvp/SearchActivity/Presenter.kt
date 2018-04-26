@@ -7,14 +7,17 @@ import bei.zi.mu.mvp.BasePresenter
 import bei.zi.mu.util.showToast
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by sodino on 2018/4/26.
  */
 public class Presenter(v : View) : BasePresenter<View>(v) {
+    private var disposable : Disposable? = null
+
     public fun reqWord(word : String) {
-        Single.just(word)
+        disposable = Single.just(word)
             .map{
                 val findResult = WordBean.findFirstByPrimaryKey(word)
                 if (findResult != null) {
@@ -43,5 +46,9 @@ public class Presenter(v : View) : BasePresenter<View>(v) {
                 "$word failure[${it.javaClass}:${it.message}]".showToast()
                 view?.respError()
             })
+    }
+
+    override fun onDestroy() {
+        disposable?.dispose()
     }
 }
