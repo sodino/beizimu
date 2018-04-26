@@ -1,10 +1,9 @@
 package bei.zi.mu.activity
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
@@ -15,27 +14,28 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import bei.zi.mu.Const
-import bei.zi.mu.LogCat
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
 import bei.zi.mu.http.bean.PhoneticSymbol
 import bei.zi.mu.http.bean.WordBean
-import bei.zi.mu.http.retrofit.ARetrofit
+import bei.zi.mu.mvp.SearchActivity.Presenter
 import bei.zi.mu.util.playMp3
 import bei.zi.mu.util.showToast
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.search_activity.*
 
 /**
  * Created by sodino on 2018/3/4.
  */
-class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEditorActionListener, Handler.Callback {
-    val MSG_SHOW_WORD                   = 1
-
+public class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEditorActionListener, bei.zi.mu.mvp.SearchActivity.View {
     lateinit var editWord   : EditText
     var wordBean            : WordBean? = null
+    val presenter           : Presenter by lazy { Presenter(this@SearchActivity) }
+    val dlgSearching        : ProgressDialog by lazy {
+        val dlg = ProgressDialog(this@SearchActivity)
+        dlg.setCancelable(false)
+        dlg.setCanceledOnTouchOutside(false)
+        dlg.setMessage(getString(R.string.searching))
+    dlg}
 
     companion object {
         fun launch(context : Context) {
@@ -47,19 +47,6 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_activity)
-    }
-
-    override fun handleMessage(msg: Message?): Boolean {
-        val what = msg?.what?:-1
-        when(what) {
-            MSG_SHOW_WORD -> {
-                val bean = msg?.obj as WordBean
-                wordBean = bean
-                showWordDetail(bean)
-            }
-        }
-
-        return true
     }
 
     override fun createTitlebar(parentLayout: LinearLayout): View {
@@ -93,46 +80,16 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
                 }
 
                 (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-                searchWord(word)
+//                searchWord(word)
+                dlgSearching.show()
+                presenter.reqWord(word)
             }
         }
         return true
     }
 
-    fun searchWord(word : String) {
-//        val findBean = WordBean.findWord(word)
-//        reqWord(word)
-
-        Single.just(word)
-                .map{
-                    val findResult = WordBean.findFirstByPrimaryKey(word)
-                    if (findResult != null) {
-                        findResult
-                    } else {
-                        val resp = ARetrofit.wordApi.reqGithubWord(word[0].toString(), word).execute()
-                        val bean = resp.body()
-                        if (bean?.isFilled() == true) {
-                            bean?.initMemoryBean()
-                            bean?.insertOrUpdate()
-                        }
-                        bean
-                    }
-                }.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    // onSuccess
-                    if (it != null) {
-                        wordBean = it
-                        showWordDetail(it)
-                    }
-                }, {
-                    // onError
-                    LogCat.e("searchWord [$word] errors", it)
-                    "$word failure[${it.javaClass}:${it.message}]".showToast()
-                })
-    }
-
     private fun showWordDetail(bean: WordBean) {
+        wordBean = bean
         txtWord.text = bean.name
         barRating.visibility = View.VISIBLE
         barRating.rating = bean.frequence.toFloat()
@@ -175,6 +132,21 @@ class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEdit
             }
 
             txtTag.setText(strTag)
+        }
+    }
+
+    override fun respWord(bean: WordBean) {
+        dismissSearchingDialog()
+        showWordDetail(bean)
+    }
+
+    override fun respError() {
+        dismissSearchingDialog()
+    }
+
+    fun dismissSearchingDialog() {
+        if (dlgSearching.isShowing) {
+            dlgSearching.dismiss()
         }
     }
 }

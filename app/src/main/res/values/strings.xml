@@ -15,4 +15,5 @@
     <string name="TOEFL">TOEFL</string>
     <string name="CET6">CET6</string>
     <string name="CET4">CET4</string>
+    <string name="searching">searching...</string>
 </resources>

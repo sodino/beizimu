@@ -41,6 +41,7 @@ public class WordListActivity : TitlebarActivity(), View.OnClickListener {
         type = intent.getIntExtra(Const.Param.I_TYPE, R.id.txtRecent100)
         setTitle(mapType2Title.get(type)?:R.string.recent100)
 
+
     }
 
     override fun onClick(v: View) {

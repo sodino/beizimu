@@ -8,7 +8,8 @@ import android.media.MediaPlayer
 public class MP3Player {
     companion object {
         private val player : MediaPlayer by lazy { MediaPlayer() }
-        fun play(mp3Path : String) {
+
+        @Synchronized fun play(mp3Path : String) {
             if (player.isPlaying) {
                 player.stop()
             }

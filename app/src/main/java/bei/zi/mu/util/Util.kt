@@ -13,6 +13,8 @@ import io.reactivex.schedulers.Schedulers
 import java.io.File
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okio.BufferedSink
+import okio.BufferedSource
 import okio.Okio
 
 
@@ -58,29 +60,41 @@ fun String.download2sdcard(filePath : String) : Boolean {
     }
     tmpFile.createNewFile()
 
-    val req = Request.Builder().url(this).build()
-    val resp = OkHttpClient().newCall(req).execute()
-    val body = resp.body()
-    val contentLength = body?.contentLength()?.toLong()
-    val source = body?.source()
-    val sink = Okio.buffer(Okio.sink(tmpFile))
-    val sinkBuffer = sink.buffer()
-    val bufferSize = 8 * 1024L
+    var source : BufferedSource? = null
+    var sink : BufferedSink?  = null
 
     var totalBytesRead = 0L
-    var bytesRead : Long = 0L
+    var contentLength : Long? = 0L
+    try {
+        val req = Request.Builder().url(this).build()
+        val resp = OkHttpClient().newCall(req).execute()
+        val body = resp.body()
+        contentLength = body?.contentLength()?.toLong()
+        source = body?.source()
+        sink = Okio.buffer(Okio.sink(tmpFile))
+        val sinkBuffer = sink.buffer()
+        val bufferSize = 8 * 1024L
 
-    while (true) {
-        bytesRead = source?.read(sinkBuffer, bufferSize) ?: -1L
-        if (bytesRead == -1L) {
-            break
+        var bytesRead : Long = 0L
+
+        while (true) {
+            bytesRead = source?.read(sinkBuffer, bufferSize) ?: -1L
+            if (bytesRead == -1L) {
+                break
+            }
+
+            sink.emit()
+            totalBytesRead += bytesRead
         }
 
-        sink.emit()
-        totalBytesRead += bytesRead
+        sink.flush()
+    } catch(t : Throwable) {
+        LogCat.e("download mp3 errors", t)
+    } finally {
+        source?.close()
+        sink?.close()
     }
 
-    sink.flush()
 
     var result = totalBytesRead == contentLength
     if (result) {
