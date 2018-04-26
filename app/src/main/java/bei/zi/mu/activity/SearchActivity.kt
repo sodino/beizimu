@@ -1,6 +1,5 @@
 package bei.zi.mu.activity
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -30,12 +29,7 @@ public class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView
     lateinit var editWord   : EditText
     var wordBean            : WordBean? = null
     val presenter           : Presenter by lazy { Presenter(this@SearchActivity) }
-    val dlgSearching        : ProgressDialog by lazy {
-        val dlg = ProgressDialog(this@SearchActivity)
-        dlg.setCancelable(false)
-        dlg.setCanceledOnTouchOutside(false)
-        dlg.setMessage(getString(R.string.searching))
-    dlg}
+
 
     companion object {
         fun launch(context : Context) {
@@ -81,7 +75,8 @@ public class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView
 
                 (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 //                searchWord(word)
-                dlgSearching.show()
+                dlgLoading.setMessage(getString(R.string.searching))
+                dlgLoading.show()
                 presenter.reqWord(word)
             }
         }
@@ -145,8 +140,8 @@ public class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView
     }
 
     fun dismissSearchingDialog() {
-        if (dlgSearching.isShowing) {
-            dlgSearching.dismiss()
+        if (dlgLoading.isShowing) {
+            dlgLoading.dismiss()
         }
     }
 

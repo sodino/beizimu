@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import bei.zi.mu.Const
 import bei.zi.mu.R
 import bei.zi.mu.activity.WordListActivity
 import kotlinx.android.synthetic.main.group_fragment.*
@@ -24,14 +25,13 @@ class GroupFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        WordListActivity.launch(context, v.id)
-//        when(v.id) {
-//            R.id.txtRecent100   -> {}
-//            R.id.txtCET4        -> {}
-//            R.id.txtCET6        -> {}
-//            R.id.txtToefl       -> {}
-//            R.id.txtGRE         -> {}
-//            R.id.txtKaoYan      -> {}
-//        }
+        when(v.id) {
+            R.id.txtRecent100   -> {WordListActivity.launch(context, Const.WordTag.RECENT_100)}
+            R.id.txtCET4        -> {WordListActivity.launch(context, Const.WordTag.CET_4)}
+            R.id.txtCET6        -> {WordListActivity.launch(context, Const.WordTag.CET_6)}
+            R.id.txtToefl       -> {WordListActivity.launch(context, Const.WordTag.TOEFL)}
+            R.id.txtGRE         -> {WordListActivity.launch(context, Const.WordTag.GRE)}
+            R.id.txtKaoYan      -> {WordListActivity.launch(context, Const.WordTag.KAO_YAN)}
+        }
     }
 }

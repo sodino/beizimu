@@ -34,19 +34,24 @@ class Const {
     }
 
     object WordTag{
+        // 0~5 为iciba的分类
         const val KAO_YAN                  = 0
         const val CET_6                    = 1
         const val CET_4                    = 2
         const val GRE                      = 3
         const val TOEFL                    = 4
         const val IELTS                    = 5
+        // 以下为自定义
+        const val RECENT_100               = 100
         val map : Map<Int, String>         = mapOf(
-                KAO_YAN     to "考研",
-                CET_6       to "CET6",
-                CET_4       to "CET4",
-                GRE         to "GRE",
-                TOEFL       to "TOEFL",
-                IELTS       to "IELTS"
+                KAO_YAN     to App.myApp.getString(R.string.kaoYan),
+                CET_4       to App.myApp.getString(R.string.CET4),
+                CET_6       to App.myApp.getString(R.string.CET6),
+                GRE         to App.myApp.getString(R.string.GRE),
+                TOEFL       to App.myApp.getString(R.string.TOEFL),
+                IELTS       to App.myApp.getString(R.string.IELTS),
+
+                RECENT_100  to App.myApp.getString(R.string.recent100)
         )
     }
 

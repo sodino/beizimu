@@ -1,6 +1,7 @@
 package bei.zi.mu
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +22,12 @@ import bei.zi.mu.util.hexString
 open class BaseActivity : FragmentActivity() {
     protected lateinit  var rootView                 : View
     protected           var viewStatusbarBackground  : View? = null
+    protected           val dlgLoading               : ProgressDialog by lazy {
+        val dlg = ProgressDialog(this@BaseActivity)
+        dlg.setCancelable(false)
+        dlg.setCanceledOnTouchOutside(false)
+//        dlg.setMessage(getString(R.string.searching))
+        dlg}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

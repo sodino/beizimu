@@ -3,28 +3,26 @@ package bei.zi.mu.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import bei.zi.mu.BaseActivity
 import bei.zi.mu.Const
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
+import bei.zi.mu.adapter.WordListAdapter
+import bei.zi.mu.http.bean.WordBean
+import bei.zi.mu.mvp.WordListActivity.Presenter
+import kotlinx.android.synthetic.main.word_list_activity.*
 
 /**
  * Created by sodino on 2018/4/24.
  */
-public class WordListActivity : TitlebarActivity(), View.OnClickListener {
-    var type : Int              = R.id.txtRecent100
+public class WordListActivity : TitlebarActivity(), View.OnClickListener, bei.zi.mu.mvp.WordListActivity.View {
 
 
+    var type            : Int              = R.id.txtRecent100
+    val presenter       : Presenter        by lazy { Presenter(this@WordListActivity) }
+    val adapter         : WordListAdapter  = WordListAdapter()
     companion object {
-        val mapType2Title by lazy { mapOf(
-                R.id.txtRecent100   to R.string.recent100,
-                R.id.txtCET4        to R.string.CET4,
-                R.id.txtCET6        to R.string.CET6,
-                R.id.txtToefl       to R.string.TOEFL,
-                R.id.txtGRE         to R.string.GRE,
-                R.id.txtKaoYan      to R.string.kaoYan
-        ) }
         public fun launch(context : Context, id : Int) {
             val intent = Intent(context, WordListActivity::class.java)
             intent.putExtra(Const.Param.I_TYPE, id)
@@ -33,18 +31,42 @@ public class WordListActivity : TitlebarActivity(), View.OnClickListener {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.word_list_activity)
 
         type = intent.getIntExtra(Const.Param.I_TYPE, R.id.txtRecent100)
-        setTitle(mapType2Title.get(type)?:R.string.recent100)
+        title = Const.WordTag.map.get(type) ?: getString(R.string.recent100)
+
+        val layoutMgr = LinearLayoutManager(this@WordListActivity)
+        layoutMgr.orientation = LinearLayoutManager.VERTICAL
+
+        recyclerView.layoutManager = layoutMgr
+        recyclerView.adapter = adapter
 
 
+        dlgLoading.setMessage(getString(R.string.loading))
+        dlgLoading.show()
+        presenter.reqWordList(type)
     }
 
     override fun onClick(v: View) {
+
     }
 
+    override fun respWordList(list: List<WordBean>) {
+        dlgLoading.dismiss()
+        adapter.updateWordList(list, false)
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun respEmpty() {
+        dlgLoading.dismiss()
+
+    }
+
+    override fun doBackPressed(): Boolean {
+        dlgLoading.dismiss()
+        return super.doBackPressed()
+    }
 }

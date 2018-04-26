@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:id="@+id/txtWord"
+        android:textSize="16sp"
+        android:textColor="@color/fontBlack"
+        android:foreground="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical|left"
+        android:paddingStart="14dp"
+        tools:text="@string/GRE"
+        />
+</RelativeLayout>

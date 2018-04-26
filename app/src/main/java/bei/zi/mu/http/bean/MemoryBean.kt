@@ -12,7 +12,6 @@ import io.objectbox.relation.ToOne
 data class MemoryBean(
         @Id
         var id               : Long              = 0,
-        var tCreate          : Long              = 0,            // 第一次查询该单词的时间
         var tLastReview      : Long              = 0,            // 上一次复习的时间
         var reviewNum        : Long              = 0,            // 复习次数
         var okPhonetic       : Boolean           = false,        // true: 记得音标
@@ -28,7 +27,7 @@ data class MemoryBean(
     }
 
     override fun updateDbBean(dbBean: MemoryBean) : MemoryBean {
-        // 第二种：直接copy，但不复制id & tCreate
+        // 第二种：直接copy，但不复制id
         return dbBean.copy(tLastReview = tLastReview,
                 reviewNum = reviewNum,
                 okPhonetic = okPhonetic,
@@ -36,7 +35,7 @@ data class MemoryBean(
     }
 
     override fun isFilled(): Boolean {
-        return tCreate > 0
+        return true
     }
 
 }

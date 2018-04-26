@@ -16,4 +16,6 @@
     <string name="CET6">CET6</string>
     <string name="CET4">CET4</string>
     <string name="searching">searching...</string>
+    <string name="loading">loading</string>
+    <string name="IELTS">IELTS</string>
 </resources>

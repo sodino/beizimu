@@ -23,6 +23,7 @@ data class WordBean(
         var id                      : Long                      = 0,
         var name                    : String?                   = null,
         var frequence               : Int                       = 0,    // 星级
+        var tCreate                 : Long                      = 0,    // 创建时间，即第一次查询该单词的时间
         @Backlink(to = "word")
         var phoneticSymbol          : ToMany<PhoneticSymbol>?   = null, // 音标 与 发音mp3文件
         // 以下为反编译后的实现
@@ -48,11 +49,21 @@ data class WordBean(
             val box = App.myApp.boxStore.boxFor(MemoryBean::class.java)
             val result = box.query()
                 .order(MemoryBean_.tLastReview)
-                .order(MemoryBean_.tCreate)
                 .build()
                 .findFirst()
 
             return result?.word?.target ?: null
+        }
+
+        fun findRecent100(): List<WordBean>? {
+            val box = App.myApp.boxStore.boxFor(WordBean::class.java)
+            val list = box.query().orderDesc(WordBean_.tCreate).build().find(0, 100)
+            return list
+        }
+
+        fun findByWordTag(type: Int): List<WordBean>? {
+
+            return null
         }
     }
 
@@ -161,8 +172,7 @@ data class WordBean(
         }
         val now = System.currentTimeMillis()
         // 当不存在oldBean时写入db
-        val memBean = MemoryBean(tCreate = now,
-                tLastReview = now,
+        val memBean = MemoryBean(tLastReview = now,
                 reviewNum = 1,
                 okPhonetic = false,
                 okMean = false)
