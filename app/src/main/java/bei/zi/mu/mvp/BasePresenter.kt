@@ -7,6 +7,8 @@ import java.lang.ref.WeakReference
  */
 
 public abstract class BasePresenter<View>(v : BaseView) {
+
+
     private val weakReference : WeakReference<BaseView> by lazy { WeakReference(v) }
 
     protected val view : View? by lazy {

@@ -12,7 +12,7 @@ import android.widget.TextView
  * Created by sodino on 2018/2/26.
  */
 @SuppressLint("Registered")
-open class TitlebarActivity : BaseActivity() {
+open class TitlebarActivity<PresenterType> : BaseActivity<PresenterType>() {
     protected lateinit  var viewContent         : View
     protected           var viewTitlebar        : View?         = null
     protected           var titleText           : TextView?     = null

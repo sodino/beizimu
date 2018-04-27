@@ -11,15 +11,17 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import bei.zi.mu.mvp.VoidPresenter
 import bei.zi.mu.util.Device
 import bei.zi.mu.util.Statusbar
 import bei.zi.mu.util.hexString
+import java.lang.reflect.ParameterizedType
 
 /**
  * Created by sodino on 2018/2/26.
  */
 @SuppressLint("Registered")
-open class BaseActivity : FragmentActivity() {
+open class BaseActivity<PresenterType> : FragmentActivity() {
     protected lateinit  var rootView                 : View
     protected           var viewStatusbarBackground  : View? = null
     protected           val dlgLoading               : ProgressDialog by lazy {
@@ -27,11 +29,31 @@ open class BaseActivity : FragmentActivity() {
         dlg.setCancelable(false)
         dlg.setCanceledOnTouchOutside(false)
 //        dlg.setMessage(getString(R.string.searching))
-        dlg}
+        dlg
+    }
+
+    protected           val presenter                : PresenterType by lazy {
+        val thiz = this@BaseActivity
+
+        val clazzPresenter = (thiz::class.java.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<*>
+
+        if (VoidPresenter::class.java == clazzPresenter) {
+            VoidPresenter.void as PresenterType
+        } else {
+            val constructor = clazzPresenter.constructors[0]
+            constructor.isAccessible = true
+
+            constructor.newInstance(thiz) as PresenterType
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LogCat.d("${javaClass.simpleName}@${hashCode().hexString()}")
+
+        if (presenter == null) {
+
+        }
     }
 
     override fun setContentView(layoutResID: Int) {

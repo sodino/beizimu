@@ -25,10 +25,10 @@ import kotlinx.android.synthetic.main.search_activity.*
 /**
  * Created by sodino on 2018/3/4.
  */
-public class SearchActivity : TitlebarActivity(), View.OnClickListener, TextView.OnEditorActionListener, bei.zi.mu.mvp.SearchActivity.View {
+public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListener, TextView.OnEditorActionListener, bei.zi.mu.mvp.SearchActivity.View {
     lateinit var editWord   : EditText
     var wordBean            : WordBean? = null
-    val presenter           : Presenter by lazy { Presenter(this@SearchActivity) }
+//    val presenter           : Presenter by lazy { Presenter(this@SearchActivity) }
 
 
     companion object {

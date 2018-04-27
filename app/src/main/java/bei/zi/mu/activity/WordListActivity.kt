@@ -16,11 +16,9 @@ import kotlinx.android.synthetic.main.word_list_activity.*
 /**
  * Created by sodino on 2018/4/24.
  */
-public class WordListActivity : TitlebarActivity(), View.OnClickListener, bei.zi.mu.mvp.WordListActivity.View {
-
-
+public class WordListActivity : TitlebarActivity<Presenter>(), View.OnClickListener, bei.zi.mu.mvp.WordListActivity.View {
     var type            : Int              = R.id.txtRecent100
-    val presenter       : Presenter        by lazy { Presenter(this@WordListActivity) }
+//    val presenter       : Presenter        by lazy { Presenter(this@WordListActivity) }
     val adapter         : WordListAdapter  = WordListAdapter()
     companion object {
         public fun launch(context : Context, id : Int) {

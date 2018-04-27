@@ -11,13 +11,14 @@ import android.widget.RelativeLayout
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
 import bei.zi.mu.adapter.MainAdapter
+import bei.zi.mu.mvp.VoidPresenter
 import bei.zi.mu.thread.ThreadPool
 import com.yanzhenjie.permission.Action
 import com.yanzhenjie.permission.AndPermission
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.word_card_titlebar.*
 
-class MainActivity : TitlebarActivity(), ViewPager.OnPageChangeListener, TabLayout.OnTabSelectedListener, View.OnClickListener {
+class MainActivity : TitlebarActivity<VoidPresenter>(), ViewPager.OnPageChangeListener, TabLayout.OnTabSelectedListener, View.OnClickListener {
 
     private val mainAdapter         by lazy { MainAdapter(supportFragmentManager) }
     private val tabLayoutListener   by lazy { TabLayout.TabLayoutOnPageChangeListener(tabLayout) }
