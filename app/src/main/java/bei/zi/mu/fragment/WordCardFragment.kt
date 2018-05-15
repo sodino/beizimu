@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import bei.zi.mu.R
+import bei.zi.mu.ext.showToast
 import bei.zi.mu.http.bean.PhoneticSymbol
 import bei.zi.mu.http.bean.WordBean
 import bei.zi.mu.util.playMp3
-import bei.zi.mu.util.showToast
 import kotlinx.android.synthetic.main.word_card_fragment.*
 
 class WordCardFragment : BaseFragment(), View.OnClickListener {

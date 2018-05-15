@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
-import bei.zi.mu.adapter.MainAdapter
+import bei.zi.mu.activity.adapter.MainAdapter
 import bei.zi.mu.mvp.VoidPresenter
 import bei.zi.mu.thread.ThreadPool
 import com.yanzhenjie.permission.Action

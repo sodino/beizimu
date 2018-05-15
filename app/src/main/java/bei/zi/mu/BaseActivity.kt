@@ -11,10 +11,10 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import bei.zi.mu.ext.hexString
 import bei.zi.mu.mvp.VoidPresenter
 import bei.zi.mu.util.Device
 import bei.zi.mu.util.Statusbar
-import bei.zi.mu.util.hexString
 import java.lang.reflect.ParameterizedType
 
 /**

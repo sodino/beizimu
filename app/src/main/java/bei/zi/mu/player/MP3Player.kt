@@ -1,4 +1,4 @@
-package bei.zi.mu.util
+package bei.zi.mu.player
 
 import android.media.MediaPlayer
 

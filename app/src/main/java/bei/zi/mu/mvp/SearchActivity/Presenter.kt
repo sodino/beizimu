@@ -1,10 +1,10 @@
 package bei.zi.mu.mvp.SearchActivity
 
 import bei.zi.mu.LogCat
+import bei.zi.mu.ext.showToast
 import bei.zi.mu.http.bean.WordBean
 import bei.zi.mu.http.retrofit.ARetrofit
 import bei.zi.mu.mvp.BasePresenter
-import bei.zi.mu.util.showToast
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

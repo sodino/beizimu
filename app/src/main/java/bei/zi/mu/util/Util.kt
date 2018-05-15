@@ -7,7 +7,10 @@ import android.widget.Toast
 import bei.zi.mu.App
 import bei.zi.mu.Const
 import bei.zi.mu.LogCat
+import bei.zi.mu.ext.download2sdcard
+import bei.zi.mu.ext.showToast
 import bei.zi.mu.http.bean.PhoneticSymbol
+import bei.zi.mu.player.MP3Player
 import bei.zi.mu.thread.ThreadPool
 import io.reactivex.schedulers.Schedulers
 import java.io.File
@@ -27,7 +30,7 @@ import okio.Okio
 //
 //}
 
-fun PhoneticSymbol.playMp3(type : Int) {
+fun PhoneticSymbol.playMp3(type : Int = PhoneticSymbol.EN) {
     Schedulers.newThread().createWorker().schedule {
         val phoneticSymbol = PhoneticSymbol@this
         val word = phoneticSymbol.word?.target?.name ?: ""
@@ -49,87 +52,8 @@ fun PhoneticSymbol.playMp3(type : Int) {
 }
 
 
-fun String.download2sdcard(filePath : String) : Boolean {
-    val tmpPath = Const.SDCard.newTmpPath()
-    val tmpFile = File(tmpPath)
-    if (tmpFile.exists()) {
-        tmpFile.delete()
-    }
-    if (!tmpFile.parentFile.exists()) {
-        tmpFile.parentFile.mkdirs()
-    }
-    tmpFile.createNewFile()
-
-    var source : BufferedSource? = null
-    var sink : BufferedSink?  = null
-
-    var totalBytesRead = 0L
-    var contentLength : Long? = 0L
-    try {
-        val req = Request.Builder().url(this).build()
-        val resp = OkHttpClient().newCall(req).execute()
-        val body = resp.body()
-        contentLength = body?.contentLength()?.toLong()
-        source = body?.source()
-        sink = Okio.buffer(Okio.sink(tmpFile))
-        val sinkBuffer = sink.buffer()
-        val bufferSize = 8 * 1024L
-
-        var bytesRead : Long = 0L
-
-        while (true) {
-            bytesRead = source?.read(sinkBuffer, bufferSize) ?: -1L
-            if (bytesRead == -1L) {
-                break
-            }
-
-            sink.emit()
-            totalBytesRead += bytesRead
-        }
-
-        sink.flush()
-    } catch(t : Throwable) {
-        LogCat.e("download mp3 errors", t)
-    } finally {
-        source?.close()
-        sink?.close()
-    }
 
 
-    var result = totalBytesRead == contentLength
-    if (result) {
-        val fResult = File(filePath)
-        if (!fResult.parentFile.exists()) {
-            fResult.parentFile.mkdirs()
-        }
-        result = tmpFile.renameTo(File(filePath))
-    }
-    return result
-}
-
-fun String.showToast() {
-    if (Looper.myLooper() == Looper.getMainLooper()) {
-        Toast.makeText(App.myApp, this, Toast.LENGTH_SHORT).show()
-    } else {
-        ThreadPool.UIHandler.post({
-            Toast.makeText(App.myApp, this, Toast.LENGTH_SHORT).show()
-        })
-    }
-}
-
-fun Int.showToast() {
-    ((App.myApp.getText(this))as String).showToast()
-}
-
-
-
-fun Long.hexString() : String {
-    return java.lang.Long.toHexString(this)
-}
-
-fun Int.hexString() : String {
-    return java.lang.Integer.toHexString(this)
-}
 
 object Device {
     val BASE = 1000

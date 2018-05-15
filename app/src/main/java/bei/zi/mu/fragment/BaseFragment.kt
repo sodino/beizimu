@@ -8,7 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import bei.zi.mu.LogCat
-import bei.zi.mu.util.hexString
+import bei.zi.mu.ext.hexString
+
 
 /**
  * Created by sodino on 2018/2/28.
