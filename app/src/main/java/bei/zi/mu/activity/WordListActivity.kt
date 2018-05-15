@@ -14,13 +14,12 @@ import bei.zi.mu.activity.adapter.WordListAdapter
 import bei.zi.mu.ext.showToast
 import bei.zi.mu.http.bean.WordBean
 import bei.zi.mu.mvp.WordListActivity.Presenter
-import bei.zi.mu.player.WordsPlayer
+import bei.zi.mu.player.WordsPlayer.Companion.player as wordsPlayer
 import bei.zi.mu.rxbus.RxBus
 import bei.zi.mu.rxbus.event.PlayingWordEvent
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.word_list_activity.*
-
 /**
  * Created by sodino on 2018/4/24.
  */
@@ -83,8 +82,8 @@ public class WordListActivity : TitlebarActivity<Presenter>(),
         when(v.id) {
             R.id.titlebar_right -> {
                 var list = v.tag as List<WordBean>
-                WordsPlayer.player.setWords(list)
-                WordsPlayer.player.play()
+                wordsPlayer.setWords(list)
+                wordsPlayer.play()
             }
         }
     }
