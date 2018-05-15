@@ -1,4 +1,4 @@
-package bei.zi.mu.fragment
+package bei.zi.mu.activity.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package bei.zi.mu.fragment
+package bei.zi.mu.activity.fragment
 
 import android.content.Context
 import android.os.Build

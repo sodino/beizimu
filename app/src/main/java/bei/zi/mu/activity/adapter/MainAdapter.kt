@@ -9,9 +9,9 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import bei.zi.mu.R
-import bei.zi.mu.fragment.GroupFragment
-import bei.zi.mu.fragment.SettingFragment
-import bei.zi.mu.fragment.WordCardFragment
+import bei.zi.mu.activity.fragment.GroupFragment
+import bei.zi.mu.activity.fragment.SettingFragment
+import bei.zi.mu.activity.fragment.WordCardFragment
 
 /**
  * Created by sodino on 2018/2/28.
