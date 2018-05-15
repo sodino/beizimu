@@ -10,7 +10,6 @@ import io.objectbox.Property
  *
  * TODO : proguard混淆配置
  * 1. getId()
- * 1. primaryKey()
  * Created by sodino on 2018/3/8.
  */
 

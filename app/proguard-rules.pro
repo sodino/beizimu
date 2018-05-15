@@ -40,7 +40,7 @@
 -keep class  org.** { *;}
 
 
-// 保留其子类的getId()方法不被混淆
+# 保留其子类的getId()方法不被混淆
 -keepclasseswithmembernames class * extends bei.zi.mu.http.bean.Bean {
     long getId();
 }

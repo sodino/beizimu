@@ -145,6 +145,7 @@ object Device {
     }
 }
 
+
 object Statusbar {
     fun fix(phone : Int, baseActivity : Activity, dark : Boolean){
         ThreadPool.UIHandler.post { ->

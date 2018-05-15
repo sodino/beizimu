@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import bei.zi.mu.ext.dip2px
 
 /**
  * Created by sodino on 2018/2/26.
@@ -77,6 +78,7 @@ open class TitlebarActivity<PresenterType> : BaseActivity<PresenterType>() {
             val lParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
             lParams.addRule(RelativeLayout.ALIGN_PARENT_END)
             lParams.addRule(RelativeLayout.CENTER_VERTICAL)
+            lParams.marginEnd = 10.dip2px()
             relLayout.addView(titleRightView, lParams)
         }
 

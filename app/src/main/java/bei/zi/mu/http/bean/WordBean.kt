@@ -150,7 +150,7 @@ data class WordBean(
 
     override fun updateDbBean(dbBean: WordBean) : WordBean {
         // 第一种：自己复制
-//        val myMemory = memory
+//        val myMemory = memor
 //        val oldMemory = dbBean.memory
 //        if (oldMemory != null && myMemory?.isNotEmpty() == true) {
 //            oldMemory.addAll(myMemory.toList())

@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by sodino on 2018/2/27.
  */
+
+@Deprecated("See ThreadPool")
 class ThreadsExecutor(corePoolSize: Int,
                       maximumPoolSize : Int,
                       keepAliveTime : Long,

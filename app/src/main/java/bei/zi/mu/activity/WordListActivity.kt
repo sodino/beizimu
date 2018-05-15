@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.RelativeLayout
+import android.widget.TextView
 import bei.zi.mu.Const
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
@@ -48,8 +50,18 @@ public class WordListActivity : TitlebarActivity<Presenter>(), View.OnClickListe
         presenter.reqWordList(type)
     }
 
-    override fun onClick(v: View) {
+    override fun createTitlebarRightView(relLayout: RelativeLayout): View {
+        val txt = TextView(this)
+        txt.text = getString(R.string.play)
+        txt.id = R.id.titlebar_right
+        txt.setOnClickListener(this@WordListActivity)
+        return txt
+    }
 
+    override fun onClick(v: View) {
+        when(v.id) {
+            R.id.titlebar_right -> {}
+        }
     }
 
     override fun respWordList(list: List<WordBean>) {

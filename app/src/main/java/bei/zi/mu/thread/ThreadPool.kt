@@ -11,6 +11,15 @@ import java.util.concurrent.locks.ReentrantLock
 /**
  * Created by sodino on 2018/2/27.
  */
+
+@Deprecated("线索池操作请使用RxJava相关的Schedulers替代。",
+ReplaceWith("""
+    * 如UI操作： <br/>
+    * AndroidSchedulers.mainThread().scheduleDirect()
+    * 工作线索操作：
+    * Schedulers.newThread().scheduleDirect()
+        """),
+        level = DeprecationLevel.WARNING)
 class ThreadPool {
     companion object {
         /**线程池中保留长驻线程数*/
