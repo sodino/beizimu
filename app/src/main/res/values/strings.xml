@@ -19,4 +19,8 @@
     <string name="loading">loading</string>
     <string name="IELTS">IELTS</string>
     <string name="play">Play</string>
+    <string name="importBatch">Import Batch</string>
+    <string name="click2import">Click \'Import Batch\' to start..</string>
+    <string name="cannotFindWordsFile">Can\'t find words file</string>
+    <string name="importing">importing...</string>
 </resources>

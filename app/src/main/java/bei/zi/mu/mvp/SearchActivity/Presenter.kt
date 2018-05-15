@@ -1,6 +1,7 @@
 package bei.zi.mu.mvp.SearchActivity
 
 import bei.zi.mu.LogCat
+import bei.zi.mu.ext.reqWord
 import bei.zi.mu.ext.showToast
 import bei.zi.mu.http.bean.WordBean
 import bei.zi.mu.http.retrofit.ARetrofit
@@ -19,18 +20,7 @@ public class Presenter(v : View) : BasePresenter<View>(v) {
     public fun reqWord(word : String) {
         disposable = Single.just(word)
             .map{
-                val findResult = WordBean.findFirstByPrimaryKey(word)
-                if (findResult != null) {
-                    findResult
-                } else {
-                    val resp = ARetrofit.wordApi.reqGithubWord(word[0].toString(), word).execute()
-                    val bean = resp.body()
-                    if (bean?.isFilled() == true) {
-                        bean?.initMemoryBean()
-                        bean?.insertOrUpdate()
-                    }
-                    bean
-                }
+                word.reqWord()
             }.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

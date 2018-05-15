@@ -27,7 +27,11 @@ data class ExchangeBean(
             val list = mutableListOf<ExchangeBean>()
 
             for ((type, name) in Const.exchange.map) {
-                val plArr = jsonExchanges.optJSONArray("word_${name}") as JSONArray
+                val tmpArr = jsonExchanges.optJSONArray("word_${name}")
+                if (tmpArr == null) {
+                    continue
+                }
+                val plArr = tmpArr as JSONArray
                 if (plArr.length() > 0) {
                     list.add(ExchangeBean(type = type, exchange = plArr.getString(0)))
                 }

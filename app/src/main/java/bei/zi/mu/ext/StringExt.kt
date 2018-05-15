@@ -5,6 +5,8 @@ import android.widget.Toast
 import bei.zi.mu.App
 import bei.zi.mu.Const
 import bei.zi.mu.LogCat
+import bei.zi.mu.http.bean.WordBean
+import bei.zi.mu.http.retrofit.ARetrofit
 import bei.zi.mu.thread.ThreadPool
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -80,4 +82,24 @@ fun String.showToast() {
             Toast.makeText(App.myApp, this, Toast.LENGTH_SHORT).show()
         })
     }
+}
+
+fun String.reqWord() : WordBean? {
+    val word = this
+    val findResult = WordBean.findFirstByPrimaryKey(word)
+    if (findResult != null) {
+        return findResult
+    } else {
+        val resp = ARetrofit.wordApi.reqGithubWord(word[0].toString(), word).execute()
+        val bean = resp.body()
+        if (bean?.isFilled() == true) {
+            bean?.initMemoryBean()
+            bean?.insertOrUpdate()
+        }
+        return bean
+    }
+}
+
+fun String.d() {
+    LogCat.d(this)
 }
