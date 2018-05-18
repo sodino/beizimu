@@ -39,11 +39,14 @@ data class MeansBean(
             for (i in 0 until length) {
                 val json = jsonMeans.get(i) as JSONObject
                 val part = json.optString("part")
-                val jsonPartMeans = json.optJSONArray("means") as JSONArray
+                val jsonPartMeans = json.optJSONArray("means")
+                if (!(jsonPartMeans is JSONArray)) {
+                    continue
+                }
                 val lPartMeans = jsonPartMeans.length()
                 var strMeans = ""
                 for (j in 0 until lPartMeans) {
-                    if (strMeans.length > 0) {
+                    if (strMeans.isNotEmpty()) {
                         strMeans += "\n"
                     }
                     strMeans += jsonPartMeans.get(j).toString()

@@ -3,6 +3,7 @@ package bei.zi.mu.http.bean
 import android.text.TextUtils
 import bei.zi.mu.App
 import bei.zi.mu.LogCat
+import bei.zi.mu.ext.d
 import io.objectbox.Property
 import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Entity
@@ -92,7 +93,19 @@ data class WordBean(
 
     override fun parse(response: String) {
         var jsonObj = JSONObject(response)
+        val errno = jsonObj.optInt("errno")
+        if (errno != 0) {
+            "parse failed. [$response]".d()
+            return
+        }
+
+
         var baseInfo = jsonObj.optJSONObject("baesInfo")    // iciba的数据写错了，竟然写成 baes ！！！
+        if (baseInfo == null) {
+            "cann't find baseInfo. [$response]".d()
+            return
+        }
+
         name = baseInfo.optString("word_name")
         frequence = baseInfo.optInt("frequence")
         tag = parseTag(baseInfo.optJSONArray("word_tag"))
@@ -105,13 +118,18 @@ data class WordBean(
             }
         }
 
-        var symbols = baseInfo.optJSONArray("symbols")[0] as JSONObject
+        var tmpArr = baseInfo.optJSONArray("symbols")
+
+        var symbols : JSONObject? = null
+        if (tmpArr is JSONArray) {
+            symbols = tmpArr[0] as JSONObject
+        }
         var phonetic : PhoneticSymbol? = null
         if (symbols != null) {
             phonetic = PhoneticSymbol.parse(symbols)
             phoneticSymbol?.add(phonetic)
         }
-        val jsonMeans = symbols.optJSONArray("parts")
+        val jsonMeans = symbols?.optJSONArray("parts")
         if (jsonMeans != null) {
             val listMeans = MeansBean.parse(jsonMeans)
             if (listMeans != null && listMeans.isNotEmpty()) {
