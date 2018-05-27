@@ -110,6 +110,8 @@ data class WordBean(
         frequence = baseInfo.optInt("frequence")
         tag = parseTag(baseInfo.optJSONArray("word_tag"))
 
+        tCreate = System.currentTimeMillis()
+
         val jsonExchanges = baseInfo.optJSONObject("exchange")
         if (jsonExchanges != null) {
             val listExchange = ExchangeBean.parse(jsonExchanges)
