@@ -36,13 +36,13 @@ data class WordBean(
         @Backlink(to = "word")
         var memory                  : ToMany<MemoryBean>?       = null, // 记忆、复习次数、时间等信息
         var tag                     : String?                   = null  // cet4,cet6,tofel,kaoyan等...
-        ) : Bean<WordBean, String>() {
+        ) : Bean<WordBean>() {
 
     companion object {
         public fun findFirstByPrimaryKey(value : String) : WordBean?{
             val clazz = WordBean::class.java
             val property = WordBean_.name
-            return findFirstByPrimaryKey<WordBean, String>(clazz, property, value)
+            return findFirstByPrimaryKey<WordBean>(clazz, arrayOf(property), arrayOf(value))
         }
 
         /** 寻找最久远的未复习的单词 */
@@ -58,7 +58,11 @@ data class WordBean(
 
         fun findRecent100(): List<WordBean>? {
             val box = App.myApp.boxStore.boxFor(WordBean::class.java)
-            val list = box.query().orderDesc(WordBean_.tCreate).build().find(0, 100)
+            val list = box.query()
+                        .notEqual(WordBean_.tCreate, 0) // 时间值为0的话为自动导入，不是用户主动查询的。
+                        .orderDesc(WordBean_.tCreate)
+                    .build()
+                    .find(0, 100)
             return list
         }
 
@@ -160,12 +164,12 @@ data class WordBean(
     }
 
 
-    override fun primaryKey(): Property {
-        return WordBean_.name
+    override fun primaryKeys(): Array<Property> {
+        return arrayOf(WordBean_.name)
     }
 
-    override fun primaryValue(): String {
-        return name ?: ""
+    override fun primaryValues(): Array<String> {
+        return arrayOf(name ?: "")
     }
 
     override fun updateDbBean(dbBean: WordBean) : WordBean {
@@ -177,16 +181,20 @@ data class WordBean(
 //        }
 
         // 第二种：直接copy，但不复制id。
-        val newBean = dbBean.copy(name = name, frequence = frequence,
-                phoneticSymbol = phoneticSymbol, means = means,
-                exchanges = exchanges, memory = memory,
+        val newBean = dbBean.copy(name = name,
+                frequence = frequence,
+                tCreate = tCreate,
+                phoneticSymbol = phoneticSymbol,
+                means = means,
+                exchanges = exchanges,
+                memory = memory,
                 tag = tag)
 
         return newBean
     }
 
     fun initMemoryBean() {
-        if (findByPrimary<WordBean>(name?:"") != null) {
+        if (findByPrimary<WordBean>(arrayOf(name?:"")) != null) {
             // 已经有存储过了，就不必再初始化MemoryBean了
             return
         }

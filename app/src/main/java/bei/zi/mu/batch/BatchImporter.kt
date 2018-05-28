@@ -25,7 +25,7 @@ object BatchImporter {
                     "importing $idx $word".d()
 
                     RxBus.post(ImportingWordEvent(idx, word))
-                    val bean = word.reqWord()
+                    val bean = word.reqWord(isBatchImport = true)
                     if (bean != null) {
                         RxBus.post(ImportedWordEvent(idx, bean))
                     }

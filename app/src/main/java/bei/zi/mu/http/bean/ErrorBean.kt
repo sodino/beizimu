@@ -5,17 +5,17 @@ import io.objectbox.Property
 /**
  * Created by sodino on 2018/3/4.
  */
-class ErrorBean : Bean<Nothing, Nothing>() {
+class ErrorBean : Bean<Nothing>() {
     override fun updateDbBean(oldBean: Nothing) : Nothing{
         throw kotlin.UnsupportedOperationException("Not supported for ErrorBean")
     }
 
-    override fun primaryValue(): Nothing {
+    override fun primaryValues(): Nothing {
         throw kotlin.UnsupportedOperationException("Not supported for ErrorBean")
     }
 
-    override fun primaryKey(): Property {
-        return Bean.None
+    override fun primaryKeys(): Array<Property> {
+        throw kotlin.UnsupportedOperationException("Not supported for ErrorBean")
     }
 
     override fun isFilled(): Boolean {

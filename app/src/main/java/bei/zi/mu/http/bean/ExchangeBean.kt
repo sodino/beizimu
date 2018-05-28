@@ -21,7 +21,7 @@ data class ExchangeBean(
        var type         : Int                   = 0,
        var exchange     : String                = "",
        var word         : ToOne<WordBean>?      = null
-) : Bean<ExchangeBean, Long>() {
+) : Bean<ExchangeBean>() {
     companion object {
         fun parse(jsonExchanges: JSONObject) : List<ExchangeBean> {
             val list = mutableListOf<ExchangeBean>()
@@ -41,12 +41,12 @@ data class ExchangeBean(
         }
     }
 
-    override fun primaryKey(): Property {
-        return None
+    override fun primaryKeys(): Array<Property> {
+        return arrayOf(ExchangeBean_.id)
     }
 
-    override fun primaryValue(): Long {
-        return id
+    override fun primaryValues(): Array<Long> {
+        return arrayOf(id)
     }
 
     override fun updateDbBean(dbBean: ExchangeBean) : ExchangeBean {

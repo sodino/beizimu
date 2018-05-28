@@ -17,13 +17,13 @@ data class MemoryBean(
         var okPhonetic       : Boolean           = false,        // true: 记得音标
         var okMean           : Boolean           = false,        // true: 记得该单词的意思
         var word             : ToOne<WordBean>?  = null
-) : Bean<MemoryBean, Long> () {
-    override fun primaryKey(): Property {
-        return MemoryBean_.id
+) : Bean<MemoryBean> () {
+    override fun primaryKeys(): Array<Property> {
+        return arrayOf(MemoryBean_.id)
     }
 
-    override fun primaryValue(): Long {
-        return id
+    override fun primaryValues(): Array<Long> {
+        return arrayOf(id)
     }
 
     override fun updateDbBean(dbBean: MemoryBean) : MemoryBean {

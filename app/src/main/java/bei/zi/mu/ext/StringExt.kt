@@ -84,16 +84,22 @@ fun String.showToast() {
     }
 }
 
-fun String.reqWord() : WordBean? {
+fun String.reqWord(isBatchImport : Boolean = false) : WordBean? {
     val word = this
     val findResult = WordBean.findFirstByPrimaryKey(word)
     if (findResult != null) {
+        if (findResult.tCreate == 0L) {
+            findResult.tCreate = System.currentTimeMillis()
+            findResult.insertOrUpdate()
+        }
+
         return findResult
     } else {
         val resp = ARetrofit.wordApi.reqGithubWord(word[0].toString(), word).execute()
         val bean = resp.body()
         if (bean?.isFilled() == true) {
             bean?.initMemoryBean()
+            bean?.tCreate = if (isBatchImport) { 0 } else { System.currentTimeMillis() }
             bean?.insertOrUpdate()
         }
         return bean
