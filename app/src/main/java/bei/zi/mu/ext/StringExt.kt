@@ -88,7 +88,7 @@ fun String.reqWord(isBatchImport : Boolean = false) : WordBean? {
     val word = this
     val findResult = WordBean.findFirstByPrimaryKey(word)
     if (findResult != null) {
-        if (findResult.tCreate == 0L) {
+        if (findResult.tCreate == 0L && !isBatchImport) {
             findResult.tCreate = System.currentTimeMillis()
             findResult.insertOrUpdate()
         }

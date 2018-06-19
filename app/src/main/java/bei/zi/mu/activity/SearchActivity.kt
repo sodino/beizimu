@@ -15,7 +15,9 @@ import android.widget.TextView
 import bei.zi.mu.Const
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
+import bei.zi.mu.dialog.WordGroupDialog
 import bei.zi.mu.ext.showToast
+import bei.zi.mu.http.bean.GroupNameBean
 import bei.zi.mu.http.bean.PhoneticSymbol
 import bei.zi.mu.http.bean.WordBean
 import bei.zi.mu.mvp.SearchActivity.Presenter
@@ -61,7 +63,18 @@ public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListene
             R.id.txtCancel      -> { finish() }
             R.id.txtPhoneticAm  -> { wordBean?.phoneticSymbol?.get(0)?.playMp3(PhoneticSymbol.AM) }
             R.id.txtPhoneticEn  -> { wordBean?.phoneticSymbol?.get(0)?.playMp3(PhoneticSymbol.EN) }
+            R.id.txtAdd2Group   -> { showWordGroupDialog() }
         }
+    }
+
+    fun showWordGroupDialog() {
+        val word = wordBean
+        if (word == null) {
+            return
+        }
+        val listGroup = GroupNameBean.all()
+        val dlg = WordGroupDialog(word, this@SearchActivity, listGroup)
+        dlg.show()
     }
 
     override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent?): Boolean {
@@ -86,6 +99,9 @@ public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListene
     private fun showWordDetail(bean: WordBean) {
         wordBean = bean
         txtWord.text = bean.name
+
+        txtAdd2Group.visibility = View.VISIBLE
+
         barRating.visibility = View.VISIBLE
         barRating.rating = bean.frequence.toFloat()
 
@@ -98,6 +114,7 @@ public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListene
 
             txtPhoneticEn.setOnClickListener(this@SearchActivity)
             txtPhoneticAm.setOnClickListener(this@SearchActivity)
+            txtAdd2Group.setOnClickListener(this@SearchActivity)
         } else {
             layoutPhonetic.visibility = View.GONE
         }

@@ -83,28 +83,46 @@ abstract class Bean<T>{
         }
     }
 
+
+    public fun remove() : Long {
+        var removeId = 0L
+        val box = App.myApp.boxStore.boxFor(javaClass)
+        if (_id != 0L) {
+            // 避免 ： IllegalArgumentException: Illegal key value: 0
+            box.remove(_id)
+            removeId = _id
+        } else {
+            // 已经生成了，也存储了，但仍然使用new对象的，而不是从数据库读取出来的，导致_ID仍是0
+            val bean = findByPrimary<T>(primaryValues())
+            if (bean is Bean<*> && bean._id != 0L) {
+                // 真正去删除，再检查一遍_ID !=0L 避免死循环
+                bean.remove()
+
+                removeId = bean._id
+            }
+        }
+
+        return removeId
+    }
+
     public fun insertOrUpdate() {
         // fixed 主键id为0时，为新对象；不为0时，为数据库中实例化的或assignable=true的情况。
-        // id = 0 时需要findByPrimary()查找一下； id不为0时可以直接save()
+        // 存储前需要findByPrimary()查找一下，根据自定义的primary进行排重。
         // save()的情况要考虑该class中的ToMany 或 ToOne 有可能也是刚new出来而不是从数据库取出来的，仍然会造成重复
         // 看是不是要java反射遍历ToMany或ToOne中的实例链
-        if (_id == 0L) {
+        val bean = findByPrimary<T>(primaryValues())
+        if (bean == null) {
             save()
         } else {
-            val bean = findByPrimary<T>(primaryValues())
-            if (bean == null) {
-                save()
-            } else {
-                val _idDB = (bean as Bean<*>)._id
-                val updateBean = updateDbBean(bean as T)
+            val _idDB = (bean as Bean<*>)._id
+            val updateBean = updateDbBean(bean as T)
 //                if (bean !== updateBean) {
 //                    throw AndroidRuntimeException("please update and return oldBean, NOT other bean!")
 //                }
-                if (_idDB != (updateBean as Bean<*>)._id) {
-                    throw AndroidRuntimeException("updateDBBean._id != oldDBBean._id")
-                }
-                save(updateBean as Bean<T>)
+            if (_idDB != (updateBean as Bean<*>)._id) {
+                throw AndroidRuntimeException("updateDBBean._id != oldDBBean._id")
             }
+            save(updateBean as Bean<T>)
         }
     }
 

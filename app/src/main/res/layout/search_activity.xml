@@ -72,4 +72,13 @@
         android:layout_below="@id/txtMeans"
         android:layout_marginTop="@dimen/view_margin_start"
         tools:text="CET4 CET6 TOFEL"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtAdd2Group"
+        android:background="@drawable/add_word"
+        android:layout_below="@id/txtTag"
+        android:visibility="invisible"/>
+
 </RelativeLayout>

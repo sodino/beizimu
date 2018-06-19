@@ -18,3 +18,7 @@ fun Int.dip2px() : Int {
 fun Int.hexString() : String {
     return java.lang.Integer.toHexString(this)
 }
+
+fun Int.resString() : String {
+    return App.myApp.getString(this)
+}

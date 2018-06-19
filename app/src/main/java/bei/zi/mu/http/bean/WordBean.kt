@@ -22,7 +22,7 @@ import org.json.JSONObject
 data class WordBean(
         @Id
         var id                      : Long                      = 0,
-        var name                    : String?                   = null,
+        var name                    : String                    = "",
         var frequence               : Int                       = 0,    // 星级
         var tCreate                 : Long                      = 0,    // 创建时间，即第一次查询该单词的时间
         @Backlink(to = "word")

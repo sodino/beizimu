@@ -23,4 +23,7 @@
     <string name="click2import">Click \'Import Batch\' to start..</string>
     <string name="cannotFindWordsFile">Can\'t find words file</string>
     <string name="importing">importing...</string>
+    <string name="new_group">New Group</string>
+    <string name="new_create">Create</string>
+    <string name="add_to">add to</string>
 </resources>
