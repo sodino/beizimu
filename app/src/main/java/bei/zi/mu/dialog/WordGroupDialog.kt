@@ -34,7 +34,7 @@ public class WordGroupDialog(bean : WordBean, activity: Activity, listGroup: Lis
     override fun onClick(v: View) {
         val group = v.tag as GroupNameBean
 
-        val groupWordBean = GroupWordBean(group = group.name, word = bean.name)
+        val groupWordBean = GroupWordBean(groupId = group.id, word = bean.name)
         groupWordBean.insertOrUpdate()
 
         dismiss()

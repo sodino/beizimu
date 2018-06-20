@@ -11,14 +11,14 @@ import io.objectbox.annotation.Id
 data class GroupWordBean (
         @Id
         var id                      : Long                      = 0,
-        var group                   : String                    = "",
+        var groupId                 : Long                      = 0,
         var word                    : String                    = ""
     ) : Bean<GroupWordBean>(){
     companion object {
-        fun findFirstByPrimaryKey(group : String, word : String) : GroupWordBean? {
+        fun findFirstByPrimaryKey(groupId : Long, word : String) : GroupWordBean? {
             val clazz = GroupWordBean::class.java
-            val propertys = arrayOf(GroupWordBean_.group, GroupWordBean_.word)
-            val values = arrayOf(group, word)
+            val propertys = arrayOf(GroupWordBean_.groupId, GroupWordBean_.word)
+            val values = arrayOf(groupId, word)
             return findFirstByPrimaryKey<GroupWordBean>(clazz, propertys, values)
         }
 
@@ -28,9 +28,9 @@ data class GroupWordBean (
             return list
         }
 
-        fun findByGroup(group: String): List<WordBean>? {
+        fun findByGroupId(groupId : Long): List<WordBean>? {
             val box = App.myApp.boxStore.boxFor(GroupWordBean::class.java)
-            val listGroupWord = box.query().equal(GroupWordBean_.group, group).build().find()
+            val listGroupWord = box.query().equal(GroupWordBean_.groupId, groupId).build().find()
             val listWord = mutableListOf<WordBean>()
             listGroupWord.forEach { val wordName = it.word
                 val wordBean = WordBean.findFirstByPrimaryKey(wordName)
@@ -44,21 +44,21 @@ data class GroupWordBean (
     }
 
     override fun primaryKeys(): Array<Property> {
-        return arrayOf(GroupWordBean_.group, GroupWordBean_.word)
+        return arrayOf(GroupWordBean_.groupId, GroupWordBean_.word)
     }
 
     override fun primaryValues(): Array<*> {
-        return arrayOf(group, word)
+        return arrayOf(groupId, word)
     }
 
     override fun updateDbBean(dbBean: GroupWordBean): GroupWordBean {
-        val newBean = dbBean.copy(group = group, word = word)
+        val newBean = dbBean.copy(groupId = groupId, word = word)
 
         return newBean
     }
 
     override fun isFilled(): Boolean {
-        val bool = group.isNotEmpty() && word.isNotEmpty()
+        val bool = groupId != 0L && word.isNotEmpty()
         return bool
     }
 

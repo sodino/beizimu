@@ -1,6 +1,7 @@
 package bei.zi.mu.mvp.WordListActivity
 
 import bei.zi.mu.Const
+import bei.zi.mu.http.bean.GroupNameBean
 import bei.zi.mu.http.bean.GroupWordBean
 import bei.zi.mu.http.bean.WordBean
 import bei.zi.mu.mvp.BasePresenter
@@ -26,9 +27,18 @@ public class Presenter(v : View) : BasePresenter<View>(v) {
         }
     }
     public fun reqWordList(group: String) {
+        val groupNameBean = GroupNameBean.findFirstByPrimaryKey(group)
+        var groupId = 0L
+        if (groupNameBean != null) {
+            groupId = groupNameBean.id
+        }
+
         var list : List<WordBean>? = null
 
-        list = GroupWordBean.findByGroup(group)
+        if (groupId != 0L) {
+            list = GroupWordBean.findByGroupId(groupId)
+        }
+
         if (list == null || list.isEmpty()) {
             view?.respEmpty()
         } else {
