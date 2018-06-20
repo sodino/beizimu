@@ -28,15 +28,17 @@ public class WordListActivity : TitlebarActivity<Presenter>(),
         bei.zi.mu.mvp.WordListActivity.View,
         Consumer<PlayingWordEvent> {
 
-    var type                        : Int              = R.id.txtRecent100
+    var type                        : Int              = 0
+    var group                       : String           = ""
 //    val presenter                 : Presenter        by lazy { Presenter(this@WordListActivity) }
     val adapter                     : WordListAdapter  = WordListAdapter()
     lateinit var disposable         : Disposable
 
     companion object {
-        public fun launch(context : Context, id : Int) {
+        public fun launch(context : Context, id : Int = 0, group : String = "") {
             val intent = Intent(context, WordListActivity::class.java)
             intent.putExtra(Const.Param.I_TYPE, id)
+            intent.putExtra(Const.Param.S_GROUP, group)
             context.startActivity(intent)
         }
     }
@@ -46,8 +48,17 @@ public class WordListActivity : TitlebarActivity<Presenter>(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.word_list_activity)
 
-        type = intent.getIntExtra(Const.Param.I_TYPE, R.id.txtRecent100)
-        title = Const.WordTag.map.get(type) ?: getString(R.string.recent100)
+        type = intent.getIntExtra(Const.Param.I_TYPE, 0)
+        group = intent.getStringExtra(Const.Param.S_GROUP)
+
+        if (type != 0) {
+            title = Const.WordTag.map.get(type) ?: getString(R.string.recent100)
+        } else if (group.isNotEmpty()){
+            title = group
+        } else {
+            finish()
+            return
+        }
 
         val layoutMgr = LinearLayoutManager(this@WordListActivity)
         layoutMgr.orientation = LinearLayoutManager.VERTICAL
@@ -58,7 +69,11 @@ public class WordListActivity : TitlebarActivity<Presenter>(),
 
         dlgLoading.setMessage(getString(R.string.loading))
         dlgLoading.show()
-        presenter.reqWordList(type)
+        if (type != 0) {
+            presenter.reqWordList(type)
+        } else {
+            presenter.reqWordList(group)
+        }
 
         disposable = RxBus.toObservable(PlayingWordEvent::class.java)
                 .subscribe(this@WordListActivity)

@@ -24,7 +24,22 @@ data class GroupWordBean (
 
         fun all(): List<GroupWordBean> {
             val box = App.myApp.boxStore.boxFor(GroupWordBean::class.java)
-            return box.all
+            val list = box.all
+            return list
+        }
+
+        fun findByGroup(group: String): List<WordBean>? {
+            val box = App.myApp.boxStore.boxFor(GroupWordBean::class.java)
+            val listGroupWord = box.query().equal(GroupWordBean_.group, group).build().find()
+            val listWord = mutableListOf<WordBean>()
+            listGroupWord.forEach { val wordName = it.word
+                val wordBean = WordBean.findFirstByPrimaryKey(wordName)
+                if (wordBean != null) {
+                    listWord.add(wordBean)
+                }
+            }
+
+            return listWord
         }
     }
 

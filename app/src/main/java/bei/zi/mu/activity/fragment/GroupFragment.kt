@@ -54,7 +54,7 @@ class GroupFragment : BaseFragment(), View.OnClickListener {
             }
             is GroupNameBean    -> {
                 val name = tag.name
-                // enter to group activity
+                WordListActivity.launch(context, group = name)
             }
         }
     }

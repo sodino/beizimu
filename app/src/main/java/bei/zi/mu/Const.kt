@@ -14,6 +14,7 @@ class Const {
 
     object Param {
         const val I_TYPE                   = "type"
+        const val S_GROUP                  = "group"
     }
 
     object SDCard {
