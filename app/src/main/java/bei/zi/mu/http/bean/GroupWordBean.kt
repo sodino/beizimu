@@ -4,6 +4,8 @@ import bei.zi.mu.App
 import io.objectbox.Property
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.query.OrderFlags
+
 /**
  * 分组与生词的结对存储
  * */
@@ -28,9 +30,15 @@ data class GroupWordBean (
             return list
         }
 
-        fun findByGroupId(groupId : Long): List<WordBean>? {
+        fun findByGroupId(groupId : Long, idDecreasing : Boolean = true): List<WordBean>? {
+            val flag = if (idDecreasing) { OrderFlags.DESCENDING } else { 0 }
+
             val box = App.myApp.boxStore.boxFor(GroupWordBean::class.java)
-            val listGroupWord = box.query().equal(GroupWordBean_.groupId, groupId).build().find()
+            val listGroupWord = box.query()
+                    .equal(GroupWordBean_.groupId, groupId)
+                    .order(GroupWordBean_.id, flag)
+                    .build()
+                    .find()
             val listWord = mutableListOf<WordBean>()
             listGroupWord.forEach { val wordName = it.word
                 val wordBean = WordBean.findFirstByPrimaryKey(wordName)
