@@ -25,6 +25,8 @@ public class WordListAdapter : RecyclerView.Adapter<WordListAdapter.Holder>() {
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val bean = list[position]
         holder.txtWord.text = bean.name
+        val phonetic = bean.phoneticSymbol?.get(0)?.en ?: ""
+        holder.txtPhoneticEn.text = if (phonetic.isEmpty()) { "" } else { "[$phonetic]"}
     }
 
     public fun updateWordList(newlist : List<WordBean>, isReset : Boolean) {
@@ -37,6 +39,7 @@ public class WordListAdapter : RecyclerView.Adapter<WordListAdapter.Holder>() {
 
     class Holder(v : View) : RecyclerView.ViewHolder(v){
         val txtWord : TextView = v.findViewById(R.id.txtWord)
+        val txtPhoneticEn : TextView = v.findViewById(R.id.txtPhoneticEn)
     }
 
 }
