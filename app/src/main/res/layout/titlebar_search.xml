@@ -37,4 +37,16 @@
         android:drawablePadding="6dp"
         android:imeOptions="actionSearch"
         />
+    
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:padding="5dp"
+        android:id="@+id/imgClear"
+        android:src="@drawable/x"
+        android:background="@drawable/circle_gray"
+        android:layout_marginEnd="8dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/txtCancel"
+        android:visibility="invisible"/>
 </RelativeLayout>

@@ -2,9 +2,9 @@ package bei.zi.mu.http.retrofit
 
 import bei.zi.mu.Const
 import bei.zi.mu.http.api.WordApi
-import bei.zi.mu.thread.ThreadPool
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 /**
  * Created by sodino on 2018/3/4.
@@ -19,7 +19,8 @@ class ARetrofit {
             val retrofit = Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(CompressConverterFactory())
-                    .callbackExecutor(ThreadPool.threadsExecutor)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//                    .callbackExecutor(ThreadPool.threadsExecutor)
                     .client(okHttpClient)
                     .build()
 

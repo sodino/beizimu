@@ -2,6 +2,8 @@ package bei.zi.mu.http.api
 
 import bei.zi.mu.http.bean.Bean
 import bei.zi.mu.http.bean.WordBean
+import io.reactivex.Flowable
+import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -18,7 +20,10 @@ interface WordApi {
     @GET(REQ_WORD)
     fun reqIciba(@QueryMap(encoded = true) map : Map<String, String>) : Call<WordBean>
 
+//    @GET(REQ_GITHUB_WORD)
+//    fun reqGithubWord(@Path("firstChar") firstChar:String, @Path("word") word:String) : Call<WordBean>
+
     // https://raw.githubusercontent.com/sodino/AllEnglishWords/master/res/words/a/a-horizon.json
     @GET(REQ_GITHUB_WORD)
-    fun reqGithubWord(@Path("firstChar") firstChar:String, @Path("word") word:String) : Call<WordBean>
+    fun reqGithubWord2(@Path("firstChar") firstChar:String, @Path("word") word:String) : Observable<WordBean>
 }

@@ -3,15 +3,14 @@ package bei.zi.mu.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import bei.zi.mu.Const
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
@@ -23,15 +22,29 @@ import bei.zi.mu.http.bean.WordBean
 import bei.zi.mu.mvp.SearchActivity.Presenter
 import bei.zi.mu.util.playMp3
 import kotlinx.android.synthetic.main.search_activity.*
+import kotlinx.android.synthetic.main.titlebar_search.*
 
 /**
  * Created by sodino on 2018/3/4.
  */
 public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListener, TextView.OnEditorActionListener, bei.zi.mu.mvp.SearchActivity.View {
     lateinit var editWord   : EditText
+    lateinit var imgClear   : ImageView
     var wordBean            : WordBean? = null
 //    val presenter           : Presenter by lazy { Presenter(this@SearchActivity) }
+    val textWatcher         = object : TextWatcher{
+        override fun afterTextChanged(s: Editable?) {
+            val string = s?.toString() ?: ""
+            imgClear.visibility = if (string.isEmpty()) { View.INVISIBLE } else { View.VISIBLE }
+        }
 
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        }
+
+    }
 
     companion object {
         fun launch(context : Context) {
@@ -53,6 +66,11 @@ public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListene
 
         editWord = relLayout.findViewById(R.id.searchEdit)
         editWord.setOnEditorActionListener(this)
+        editWord.addTextChangedListener(textWatcher)
+
+
+        imgClear = relLayout.findViewById(R.id.imgClear)
+        imgClear.setOnClickListener(this)
 
         return relLayout
     }
@@ -61,6 +79,7 @@ public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListene
     override fun onClick(v: View) {
         when(v.id) {
             R.id.txtCancel      -> { finish() }
+            R.id.imgClear       -> { editWord.setText("") }
             R.id.txtPhoneticAm  -> { wordBean?.phoneticSymbol?.get(0)?.playMp3(PhoneticSymbol.AM) }
             R.id.txtPhoneticEn  -> { wordBean?.phoneticSymbol?.get(0)?.playMp3(PhoneticSymbol.EN) }
             R.id.txtAdd2Group   -> { showWordGroupDialog() }
@@ -90,7 +109,7 @@ public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListene
 //                searchWord(word)
                 dlgLoading.setMessage(getString(R.string.searching))
                 dlgLoading.show()
-                presenter.reqWord(word)
+                presenter.reqWord2(word)
             }
         }
         return true

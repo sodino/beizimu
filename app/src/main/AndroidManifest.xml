@@ -15,6 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="9bbd55137b733e7c42eb8422df808f747a581a56"
+            />
         <activity android:name=".activity.MainActivity"
             android:theme="@style/splash"
             android:screenOrientation="portrait">

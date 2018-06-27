@@ -12,11 +12,12 @@ import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
 import bei.zi.mu.activity.adapter.MainAdapter
 import bei.zi.mu.mvp.VoidPresenter
-import bei.zi.mu.thread.ThreadPool
 import com.yanzhenjie.permission.Action
 import com.yanzhenjie.permission.AndPermission
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.word_card_titlebar.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : TitlebarActivity<VoidPresenter>(), ViewPager.OnPageChangeListener, TabLayout.OnTabSelectedListener, View.OnClickListener {
 
@@ -121,7 +122,7 @@ class MainActivity : TitlebarActivity<VoidPresenter>(), ViewPager.OnPageChangeLi
         setTransparentStatusbar(null)
 
         // SAM constructor : single abstract method
-        ThreadPool.UIHandler.postDelayed({ showMain() }, 2000);
+        AndroidSchedulers.mainThread().scheduleDirect({ showMain() }, 2, TimeUnit.SECONDS)
     }
 
     private fun getShowType(): Int {

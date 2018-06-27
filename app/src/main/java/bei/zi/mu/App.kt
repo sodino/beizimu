@@ -2,6 +2,8 @@ package bei.zi.mu
 
 import android.app.Application
 import bei.zi.mu.http.bean.MyObjectBox
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import io.objectbox.BoxStore
 import io.objectbox.android.AndroidObjectBrowser
 
@@ -29,6 +31,7 @@ open class App : Application() {
         myApp = this@App
 
         initObjectBox()
+        Fabric.with(this, Crashlytics())
     }
 
     fun initObjectBox() {

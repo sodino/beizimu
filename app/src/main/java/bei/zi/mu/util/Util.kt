@@ -11,7 +11,7 @@ import bei.zi.mu.ext.download2sdcard
 import bei.zi.mu.ext.showToast
 import bei.zi.mu.http.bean.PhoneticSymbol
 import bei.zi.mu.player.MP3Player
-import bei.zi.mu.thread.ThreadPool
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.File
 import okhttp3.OkHttpClient
@@ -72,8 +72,8 @@ object Device {
 
 object Statusbar {
     fun fix(phone : Int, baseActivity : Activity, dark : Boolean){
-        ThreadPool.UIHandler.post { ->
-            when(phone){
+        AndroidSchedulers.mainThread().scheduleDirect{ ->
+                when(phone){
                 Device.MEIZU -> {fixMeizu(baseActivity, dark)}
                 Device.XIAOMI -> {fixXiaomi(baseActivity, dark)}
             }
