@@ -8,9 +8,9 @@ import android.widget.TextView
 import bei.zi.mu.R
 import bei.zi.mu.http.bean.WordBean
 
-public class WordListAdapter : RecyclerView.Adapter<WordListAdapter.Holder>() {
-    val list : MutableList<WordBean> = mutableListOf()
-
+public class WordListAdapter(listener : View.OnClickListener) : RecyclerView.Adapter<WordListAdapter.Holder>() {
+    val list : MutableList<WordBean>    = mutableListOf()
+    val clickListener                   = listener
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.word_list_item, parent, false)
 
@@ -26,7 +26,13 @@ public class WordListAdapter : RecyclerView.Adapter<WordListAdapter.Holder>() {
         val bean = list[position]
         holder.txtWord.text = bean.name
         val phonetic = bean.phoneticSymbol?.get(0)?.en ?: ""
-        holder.txtPhoneticEn.text = if (phonetic.isEmpty()) { "" } else { "[$phonetic]"}
+        holder.txtWord.append( if (phonetic.isEmpty()) { "" } else { "      [$phonetic]"} )
+
+
+        holder.txtWord.setOnClickListener(clickListener)
+        holder.itemView.setOnClickListener(clickListener)
+        holder.txtWord.setTag(bean)
+        holder.itemView.setTag(bean)
     }
 
     public fun updateWordList(newlist : List<WordBean>, isReset : Boolean) {
@@ -39,7 +45,6 @@ public class WordListAdapter : RecyclerView.Adapter<WordListAdapter.Holder>() {
 
     class Holder(v : View) : RecyclerView.ViewHolder(v){
         val txtWord : TextView = v.findViewById(R.id.txtWord)
-        val txtPhoneticEn : TextView = v.findViewById(R.id.txtPhoneticEn)
     }
 
 }

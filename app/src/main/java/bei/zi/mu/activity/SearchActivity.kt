@@ -15,6 +15,7 @@ import bei.zi.mu.Const
 import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
 import bei.zi.mu.dialog.WordGroupDialog
+import bei.zi.mu.ext.hideSoftImputFromWindow
 import bei.zi.mu.ext.showToast
 import bei.zi.mu.http.bean.GroupNameBean
 import bei.zi.mu.http.bean.PhoneticSymbol
@@ -47,8 +48,9 @@ public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListene
     }
 
     companion object {
-        fun launch(context : Context) {
+        fun launch(context : Context, word : String = "") {
             val intent = Intent(context, SearchActivity::class.java)
+            intent.putExtra(Const.Param.S_WORD, word)
             context.startActivity(intent)
         }
     }
@@ -56,6 +58,13 @@ public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_activity)
+
+
+        val word = intent.getStringExtra(Const.Param.S_WORD) ?: ""
+        if (word.isNotEmpty()) {
+            editWord.setText(word)
+            try2RequestWord()
+        }
     }
 
     override fun createTitlebar(parentLayout: LinearLayout): View {
@@ -99,20 +108,26 @@ public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListene
     override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent?): Boolean {
         when(actionId) {
             EditorInfo.IME_ACTION_SEARCH -> {
-                val word = editWord.text.toString().trim()
-                if (TextUtils.isEmpty(word)) {
-                    "Please enter a word".showToast()
-                    return true
-                }
-
-                (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-//                searchWord(word)
-                dlgLoading.setMessage(getString(R.string.searching))
-                dlgLoading.show()
-                presenter.reqWord2(word)
+                try2RequestWord()
             }
         }
         return true
+    }
+
+    fun try2RequestWord() {
+        val word = editWord.text.toString().trim()
+        if (TextUtils.isEmpty(word)) {
+            "Please enter a word".showToast()
+            return
+        }
+
+        if (currentFocus != null) {
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        }
+//                searchWord(word)
+        dlgLoading.setMessage(getString(R.string.searching))
+        dlgLoading.show()
+        presenter.reqWord2(word)
     }
 
     private fun showWordDetail(bean: WordBean) {
@@ -167,6 +182,7 @@ public class SearchActivity : TitlebarActivity<Presenter>(), View.OnClickListene
     }
 
     override fun respWord(bean: WordBean) {
+//        editWord.hideSoftImputFromWindow()
         dismissSearchingDialog()
         showWordDetail(bean)
     }

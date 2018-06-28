@@ -12,11 +12,13 @@ import bei.zi.mu.R
 import bei.zi.mu.TitlebarActivity
 import bei.zi.mu.activity.adapter.WordListAdapter
 import bei.zi.mu.ext.showToast
+import bei.zi.mu.http.bean.PhoneticSymbol
 import bei.zi.mu.http.bean.WordBean
 import bei.zi.mu.mvp.WordListActivity.Presenter
 import bei.zi.mu.player.WordsPlayer.Companion.player as wordsPlayer
 import bei.zi.mu.rxbus.RxBus
 import bei.zi.mu.rxbus.event.PlayingWordEvent
+import bei.zi.mu.util.playMp3
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.word_list_activity.*
@@ -31,7 +33,7 @@ public class WordListActivity : TitlebarActivity<Presenter>(),
     var type                        : Int              = 0
     var group                       : String           = ""
 //    val presenter                 : Presenter        by lazy { Presenter(this@WordListActivity) }
-    val adapter                     : WordListAdapter  = WordListAdapter()
+    val adapter                     : WordListAdapter  = WordListAdapter(this@WordListActivity)
     lateinit var disposable         : Disposable
 
     companion object {
@@ -94,11 +96,26 @@ public class WordListActivity : TitlebarActivity<Presenter>(),
     }
 
     override fun onClick(v: View) {
+        val tag = v.tag
         when(v.id) {
             R.id.titlebar_right -> {
                 var list = v.tag as List<WordBean>
                 wordsPlayer.setWords(list)
                 wordsPlayer.play()
+            }
+            R.id.txtWord        -> {
+                if (!(tag is WordBean)) {
+                    return
+                }
+
+                tag.phoneticSymbol?.get(0)?.playMp3(PhoneticSymbol.EN)
+            }
+            R.id.layoutWord     -> {
+                if (!(tag is WordBean)) {
+                    return
+                }
+                val word = tag.name
+                SearchActivity.launch(this, word)
             }
         }
     }
