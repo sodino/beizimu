@@ -21,6 +21,16 @@ public class Presenter(v : View) : BasePresenter<View>(v) {
         val reqNet = word.reqGithubWord()
         Observable.concat(reqLocal, reqNet)
                 .firstOrError()
+                .map { bean ->
+                    if (bean.id == 0L) { // 从后台拉取的数据需要保存到db
+                        if (bean.isFilled()) {
+                            bean.initMemoryBean()
+                            bean.insertOrUpdate()
+                        }
+                    }
+
+                    bean
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
